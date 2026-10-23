@@ -1,0 +1,155 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+:root {
+  color-scheme: light;
+  --bg: 221 238 240;
+  --bg-soft: 201 227 230;
+  --surface: 244 250 250;
+  --border: 175 210 214;
+  --ink: 8 51 63;
+  --ink-muted: 60 101 112;
+  --teal: 18 121 134;
+  --teal-hover: 14 98 112;
+  --teal-light: 63 179 192;
+  --ocean-deep: 11 61 74;
+  --coral: 242 121 91;
+  --coral-text: 143 47 28;
+  --coral-ink: 8 51 63;
+  --coral-soft: 249 205 191;
+  --sand: 239 227 204;
+  --shadow-card: 8 51 63;
+  --theme-color: #0b3d4a;
+}
+
+:root.dark {
+  color-scheme: dark;
+  --bg: 6 26 32;
+  --bg-soft: 10 37 45;
+  --surface: 14 47 56;
+  --border: 29 74 85;
+  --ink: 227 243 244;
+  --ink-muted: 156 192 198;
+  --teal: 60 184 198;
+  --teal-hover: 92 202 214;
+  --teal-light: 92 202 214;
+  --ocean-deep: 4 20 26;
+  --coral: 255 138 107;
+  --coral-text: 255 176 154;
+  --coral-ink: 6 26 32;
+  --coral-soft: 74 42 34;
+  --sand: 58 51 38;
+  --shadow-card: 0 0 0;
+  --theme-color: #04141a;
+}
+
+.dark .logo-mark-light { display: none; }
+.dark .logo-mark-dark { display: block; }
+
+@theme {
+  --color-bg: rgb(var(--bg));
+  --color-bg-soft: rgb(var(--bg-soft));
+  --color-surface: rgb(var(--surface));
+  --color-border: rgb(var(--border));
+  --color-ink: rgb(var(--ink));
+  --color-ink-muted: rgb(var(--ink-muted));
+  --color-teal: rgb(var(--teal));
+  --color-teal-hover: rgb(var(--teal-hover));
+  --color-teal-light: rgb(var(--teal-light));
+  --color-teal-dark: rgb(var(--teal));
+  --color-ocean-deep: rgb(var(--ocean-deep));
+  --color-coral: rgb(var(--coral));
+  --color-coral-text: rgb(var(--coral-text));
+  --color-coral-ink: rgb(var(--coral-ink));
+  --color-coral-soft: rgb(var(--coral-soft));
+  --color-sand: rgb(var(--sand));
+
+  --font-sans: "Inter", "Noto Sans Bengali", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", "Noto Sans Bengali", ui-serif, Georgia, serif;
+  --font-bn: "Noto Sans Bengali", "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-xl: 20px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+
+  --animate-fade-up: fade-up 0.6s ease-out both;
+  --animate-fade-in: fade-in 0.5s ease-out both;
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  html[lang="bn"] body,
+  body.font-bn {
+    font-family: var(--font-bn);
+    line-height: 1.75;
+    letter-spacing: 0;
+  }
+  body {
+    @apply bg-bg text-ink antialiased;
+    font-family: var(--font-sans);
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+  html[lang="bn"] h1,
+  html[lang="bn"] h2,
+  html[lang="bn"] h3,
+  html[lang="bn"] h4 {
+    font-family: var(--font-bn);
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+  :focus-visible {
+    outline: 2px solid rgb(var(--teal));
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  .dark img:not([data-preserve-brightness="true"]) {
+    filter: brightness(0.92);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .container-px { @apply mx-auto w-full max-w-6xl px-5 sm:px-8; }
+  .btn, .btn-primary, .btn-secondary, .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition
+      disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply bg-teal text-white shadow-sm hover:bg-teal-hover active:scale-[0.98];
+  }
+  .dark .btn-primary { @apply text-ink; }
+  .btn-secondary {
+    @apply border border-border bg-surface text-ink hover:bg-bg-soft active:scale-[0.98];
+  }
+  .btn-ghost { @apply text-ink hover:bg-bg-soft; }
+  .card {
+    @apply rounded-2xl border border-border bg-surface shadow-sm;
+    box-shadow: 0 1px 8px rgb(var(--shadow-card) / 0.06);
+  }
+  .badge { @apply inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium; }
+  .skeleton { @apply animate-pulse rounded-xl bg-bg-soft; }
+}
+
+.snap-row { scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+.snap-item { scroll-snap-align: start; }
+::-webkit-scrollbar { height: 8px; width: 8px; }
+::-webkit-scrollbar-thumb { background: rgb(var(--border)); border-radius: 999px; }

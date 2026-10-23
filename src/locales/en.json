@@ -1,0 +1,260 @@
+{
+  "brand": { "name": "Shonjibon", "motto": "New life from waste" },
+  "theme": {
+    "switch": "Change theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "navGroup": { "shop": "Shop", "concerns": "Our Concerns", "work": "Our Work", "news": "News", "about": "About" },
+  "nav": {
+    "home": "Home",
+    "products": "Products",
+    "research": "Research",
+    "testing": "Testing",
+    "concerns": "Our Concerns",
+    "coastalProblem": "Coastal Water Challenges",
+    "health": "Health Topics",
+    "community": "Community",
+    "news": "News",
+    "team": "Team",
+    "about": "About",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "call": "Call",
+    "cart": "Cart",
+    "menu": "Menu",
+    "close": "Close",
+    "admin": "Admin"
+  },
+  "actions": {
+    "shopNow": "Shop Now",
+    "ourStory": "Our Story",
+    "viewDetails": "View Details",
+    "addToCart": "Add To Cart",
+    "buyNow": "Buy Now",
+    "readMore": "Read More",
+    "seeAll": "See All",
+    "subscribe": "Subscribe",
+    "submit": "Submit",
+    "checkout": "Checkout",
+    "placeOrder": "Place Order",
+    "backToShop": "Back To Shop",
+    "continueShopping": "Continue Shopping",
+    "remove": "Remove",
+    "share": "Share",
+    "download": "Download",
+    "viewAll": "View All",
+    "learnMore": "Learn More"
+  },
+  "common": {
+    "sample": "Sample data",
+    "loading": "Loading...",
+    "loadError": "This content could not be loaded. Please try again later.",
+    "empty": "Nothing here yet.",
+    "price": "Price",
+    "stock": {
+      "in_stock": "In stock",
+      "preorder": "Pre-order",
+      "out_of_stock": "Out of stock",
+      "coming_soon": "Coming soon"
+    },
+    "quantity": "Quantity",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "currencyNote": "BDT",
+    "testingInProgress": "Testing in progress"
+  },
+  "home": {
+    "heroTitle": "A water filter made from shrimp shells",
+    "heroSubtitle": "A low-cost, electricity-free filter built with chitosan — helps reduce arsenic, heavy metals and turbidity.",
+    "impactTitle": "Our impact",
+    "shellTitle": "Which part of the shell we use",
+    "shellBody": "Chitosan is extracted from the chitin layer of shrimp shells — the core ingredient of our filter.",
+    "productsTitle": "Our products",
+    "productsSubtitle": "One flagship filter, four waste-based byproducts.",
+    "loopTitle": "Circular economy",
+    "loopBody": "From shell collection to finished product — nothing goes to waste.",
+    "wasteTitle": "Waste reduction",
+    "wasteBody": "A large share of collected shrimp shells is now reused instead of discarded.",
+    "journeyTitle": "Our journey",
+    "communityTitle": "From the community",
+    "newsTitle": "Latest articles",
+    "teamTitle": "The people behind Shonjibon",
+    "testimonialsTitle": "What people say",
+    "ctaTitle": "Join our journey",
+    "ctaBody": "Get new product and research updates straight to your inbox.",
+    "newsletterPlaceholder": "Your email address"
+  },
+  "products": {
+    "title": "Our products",
+    "subtitle": "Every product turns shrimp-shell waste into something valuable.",
+    "related": "Related products",
+    "bulkTitle": "Bulk or institutional orders?",
+    "bulkBody": "For NGOs, schools or large quantities, reach out directly.",
+    "howMade": "How it's made",
+    "benefits": "Benefits",
+    "specs": "Specifications",
+    "gallery": "Gallery",
+    "trustLine": "Why trust it",
+    "allergenTitle": "Allergen warning",
+    "limitationsTitle": "Limitations"
+  },
+  "filterClaims": {
+    "line1": "Helps reduce arsenic, heavy metals and turbidity.",
+    "line2": "Does not remove salinity; pair with rainwater harvesting and SODIS solar disinfection for germs."
+  },
+  "research": {
+    "title": "Research & process",
+    "subtitle": "The science behind chitosan extraction and filter design.",
+    "extractionTitle": "Chitosan extraction process",
+    "filterTitle": "5-layer filter design",
+    "findingsTitle": "Research findings",
+    "limitationsTitle": "Honest limitations",
+    "salinityTitle": "Our position on salinity",
+    "salinityBody": "The Shonjibon filter does not remove salinity. We recommend pairing it with rainwater harvesting, and we are researching chitosan as a possible RO pre-treatment material."
+  },
+  "testing": {
+    "title": "Lab Test Results",
+    "subtitle": "Before/after comparisons against Bangladesh ECR/DPHE and WHO standards.",
+    "before": "Before filtering",
+    "after": "After filtering",
+    "control": "Control sample",
+    "chart": "Comparison chart",
+    "tableTitle": "Detailed results table",
+    "parameter": "Parameter",
+    "standard": "Standard"
+  },
+  "community": {
+    "title": "Picture Gallery",
+    "subtitle": "Moments from Chuknagar, MU Sea Food, and our lab."
+  },
+  "pages": {
+    "coastal": {
+      "title": "Coastal water challenges",
+      "subtitle": "Communities in Satkhira, Khulna and Bagerhat face connected challenges in accessing safe drinking water.",
+      "items": [
+        { "title": "Groundwater and arsenic", "body": "Groundwater quality varies by location. Arsenic is a known concern in parts of Bangladesh; test water sources and follow local public-health guidance." },
+        { "title": "Salinity in drinking water", "body": "Saline conditions can make reliable drinking-water access difficult, especially in coastal areas. Rainwater harvesting can be one part of a locally appropriate response." },
+        { "title": "Electricity and treatment costs", "body": "Some treatment approaches require electricity, maintenance and household investment, which may be difficult to sustain." },
+        { "title": "Distance to safe water", "body": "When a safe source is far away, families may face additional time and transport burdens to collect water." },
+        { "title": "Shrimp-shell waste", "body": "Shrimp processing can leave shells that are discarded. Reusing suitable shell waste can support a circular-economy approach." },
+        { "title": "A complementary response", "body": "Shonjibon is developing an electricity-free filter that helps reduce arsenic, heavy metals and turbidity. It does not remove salinity or disinfect water." }
+      ],
+      "cta": "Explore the Shonjibon filter"
+    },
+    "concerns": {
+      "title": "Our concerning issues",
+      "subtitle": "The challenges are connected; solutions need to be locally tested and community-led.",
+      "items": [
+        { "title": "Unsafe drinking water", "body": "Water quality can vary between sources. Testing and locally trusted guidance matter." },
+        { "title": "Cost of treatment", "body": "Equipment, energy and maintenance costs can make some treatment options hard to access." },
+        { "title": "Shrimp-shell waste", "body": "Discarded shells can create a local waste burden instead of becoming a useful resource." },
+        { "title": "Women's livelihood opportunities", "body": "Community-led shell processing and craft work can create opportunities when designed fairly and safely." },
+        { "title": "Children and pregnancy", "body": "Children and pregnant people may be more vulnerable to health risks from unsafe water; consult health professionals and local authorities." },
+        { "title": "Access to testing", "body": "People need practical access to trustworthy water testing and clear explanations of results." }
+      ]
+    },
+    "health": {
+      "title": "Health and water safety",
+      "subtitle": "General information about water-related health concerns. Consult qualified health professionals for personal advice.",
+      "items": [
+        { "title": "Arsenic exposure", "body": "Long-term exposure to arsenic in drinking water can pose serious health risks. Use tested sources and follow public-health advice." },
+        { "title": "Diarrheal disease and cholera", "body": "Unsafe water can contribute to diarrheal illness. Follow local water-treatment and sanitation guidance; seek care for dehydration or severe symptoms." },
+        { "title": "Salinity and maternal health", "body": "Drinking-water salinity is a public-health concern in some coastal settings. Pregnant people should discuss individual concerns with a qualified clinician." },
+        { "title": "Skin problems", "body": "Skin symptoms can have many causes. A healthcare professional can help identify the cause and recommend treatment." },
+        { "title": "Practical safety steps", "body": "Use a tested safe source where available, store drinking water in clean covered containers, and follow local health advisories." }
+      ],
+      "doctorTitle": "When to see a doctor",
+      "doctorBody": "Seek medical care for severe or persistent diarrhea, signs of dehydration, concerning skin changes, or any urgent symptoms.",
+      "disclaimer": "This page provides general educational information, not medical advice, diagnosis, or treatment."
+    }
+  },
+  "news": {
+    "title": "News & articles",
+    "subtitle": "Water safety, arsenic awareness, and research updates.",
+    "allCategories": "All categories",
+    "by": "By",
+    "relatedArticles": "Related articles"
+  },
+  "team": {
+    "title": "Our team",
+    "subtitle": "A student project under BRAC Amra Notun Network (JUST Cohort 2026).",
+    "coreTeam": "Core team",
+    "facilitators": "Facilitators"
+  },
+  "about": {
+    "title": "About us",
+    "subtitle": "New life from waste — a student-led innovation.",
+    "missionTitle": "Mission",
+    "visionTitle": "Vision",
+    "sourcingTitle": "Shell sourcing",
+    "sourcingBody": "We collect shrimp shells from Chuknagar and MU Sea Food, waste that would otherwise be discarded."
+  },
+  "faq": { "title": "FAQ", "subtitle": "Frequently asked questions." },
+  "contact": {
+    "title": "Get in touch",
+    "subtitle": "Questions, feedback, or partnership ideas — we'd love to hear from you.",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "subject": "Subject",
+    "message": "Message",
+    "success": "Thanks! We've received your message and will be in touch soon.",
+    "info": "Contact info",
+    "resources": "Downloadable resources",
+    "whatsapp": "Chat on WhatsApp"
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty.",
+    "goShopping": "Start shopping"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "subtitle": "Share delivery details — we'll call to confirm.",
+    "customerDetails": "Customer details",
+    "fullName": "Full name",
+    "phone": "Phone number",
+    "email": "Email (optional)",
+    "address": "Address",
+    "district": "District",
+    "note": "Additional note (optional)",
+    "paymentNote": "Payment: bKash, Nagad, or cash on delivery. We will call to confirm your order.",
+    "orderSummary": "Order summary"
+  },
+  "orderSuccess": {
+    "title": "Thank you for your order!",
+    "body": "Your order number is",
+    "callConfirm": "We will call soon to confirm. Payment: bKash, Nagad, or cash on delivery."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The page you're looking for may have been removed or never existed.",
+    "cta": "Back to home"
+  },
+  "footer": {
+    "tagline": "New life from waste — a student-led innovation for safe water in coastal Bangladesh.",
+    "links": "Links",
+    "contact": "Contact",
+    "follow": "Follow us",
+    "rights": "All rights reserved.",
+    "program": "A BRAC Amra Notun Network (JUST Cohort 2026) project."
+  },
+  "admin": {
+    "loginTitle": "Admin login",
+    "password": "Password",
+    "login": "Log in",
+    "logout": "Log out",
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add new",
+    "confirmDelete": "Are you sure you want to delete this?",
+    "unsaved": "You have unsaved changes.",
+    "saved": "Saved."
+  }
+}

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0B3F4F"/>
+      <stop offset="1" stop-color="#1A9AA8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <path d="M600 140C480 280 380 370 380 470a220 220 0 0 0 440 0c0-100-100-190-220-330Z" fill="#F2795B" opacity="0.9"/>
+  <text x="600" y="580" font-family="sans-serif" font-size="46" font-weight="700" fill="white" text-anchor="middle">সঞ্জীবন · Shonjibon</text>
+</svg>

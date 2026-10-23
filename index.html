@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="bn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0B3F4F" />
+    <script>
+      (() => {
+        const saved = localStorage.getItem("theme") || "system";
+        const dark = saved === "dark" || (saved === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.classList.toggle("dark", dark);
+        document.querySelector('meta[name="theme-color"]')?.setAttribute("content", dark ? "#04141a" : "#0b3d4a");
+        const language = localStorage.getItem("shonjibon.lang");
+        if (language === "bn" || language === "en") document.documentElement.lang = language;
+      })();
+    </script>
+    <title>সঞ্জীবন | Shonjibon — বর্জ্য থেকে নতুন জীবন</title>
+    <meta
+      name="description"
+      content="সঞ্জীবন: চিংড়ির খোলস থেকে তৈরি কাইটোসান দিয়ে তৈরি সাশ্রয়ী, বিদ্যুৎবিহীন, মাধ্যাকর্ষণ-চালিত ৫-স্তর পানি ফিল্টার — আর্সেনিকপ্রবণ উপকূলীয় বাংলাদেশের জন্য। Shonjibon turns shrimp-shell waste into chitosan for a low-cost, electricity-free water filter."
+    />
+    <meta property="og:title" content="সঞ্জীবন | Shonjibon — বর্জ্য থেকে নতুন জীবন" />
+    <meta property="og:description" content="Shrimp-shell waste to chitosan: a low-cost, electricity-free, gravity-fed water filter for arsenic-affected coastal Bangladesh." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/og-image.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href="https://shonjibon.example.com/" />
+
+    <!-- Performance: preconnect to font + supabase origins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
