@@ -48,8 +48,14 @@ export type EmailLoginInput = z.infer<typeof emailLoginSchema>;
 export const accountSignupSchema = z.object({
   full_name: z.string().trim().min(2, "নাম কমপক্ষে ২ অক্ষর হতে হবে / Name must be at least 2 characters"),
   email: z.string().trim().email("সঠিক ইমেইল দিন / Enter a valid email"),
-  password: z.string().min(8, "পাসওয়ার্ড কমপক্ষে ৮ অক্ষর হতে হবে / Password must be at least 8 characters"),
+  password: z.string().min(10, "পাসওয়ার্ড কমপক্ষে ১০ অক্ষর হতে হবে / Password must be at least 10 characters"),
+  phone: z.union([
+    z.literal(""),
+    z.string().trim().regex(/^01[3-9]\d{8}$/, "বাংলাদেশি মোবাইল নম্বর দিন / Enter a valid Bangladesh mobile number"),
+  ]).optional(),
+  termsAccepted: z.literal(true, "Terms and Privacy Policy-তে সম্মতি দিন / Accept the Terms and Privacy Policy"),
 });
+export type AccountSignupInput = z.infer<typeof accountSignupSchema>;
 
 export const accountLoginSchema = z.object({
   email: z.string().trim().email("সঠিক ইমেইল দিন / Enter a valid email"),
@@ -189,7 +195,7 @@ export const backupSchema = z.custom<DB>((value): value is DB => {
   const listKeys = [
     "products", "article_categories", "articles", "journey_milestones", "research_items", "shell_parts",
     "test_results", "impact_stats", "community_visits", "team_members", "testimonials", "faqs",
-    "partners", "downloads", "orders", "contact_messages", "subscribers", "media", "audit_log",
+    "partners", "downloads", "orders", "contact_messages", "subscribers", "media", "audit_log", "site_texts",
   ];
   if (!listKeys.every((key) => Array.isArray(value[key]) && (value[key] as unknown[]).every(isRecord))) return false;
   if (!Number.isInteger(value.order_seq) || (value.order_seq as number) < 0) return false;

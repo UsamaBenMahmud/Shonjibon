@@ -187,7 +187,7 @@ export type FieldSpec =
   | { kind: "text"; key: string; label: string; required?: boolean }
   | { kind: "image"; key: string; label: string }
   | { kind: "file"; key: string; label: string }
-  | { kind: "textarea"; key: string; label: string }
+  | { kind: "textarea"; key: string; label: string; required?: boolean }
   | { kind: "photos"; key: string; label: string }
   | { kind: "number"; key: string; label: string }
   | { kind: "boolean"; key: string; label: string }

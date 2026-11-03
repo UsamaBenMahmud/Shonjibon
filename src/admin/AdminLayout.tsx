@@ -4,40 +4,42 @@ import { LanguageToggle, Logo, ThemeToggle } from "@/components/shared";
 import { Toaster } from "@/components/ui/Toast";
 import { listMessagesAdmin, listOrdersAdmin, listArticlesAdmin } from "@/lib/api";
 import { cn } from "@/utils/cn";
+import { adminHref } from "@/lib/adminPath";
 
 const navGroups: { label: string; items: { to: string; label: string }[] }[] = [
-  { label: "Overview", items: [{ to: "/admin", label: "ড্যাশবোর্ড / Dashboard" }, { to: "/admin/settings", label: "সেটিংস / Settings" }, { to: "/admin/health", label: "স্বাস্থ্য পরীক্ষা / Health check" }] },
+  { label: "Overview", items: [{ to: "", label: "ড্যাশবোর্ড / Dashboard" }, { to: "settings", label: "সেটিংস / Settings" }, { to: "health", label: "স্বাস্থ্য পরীক্ষা / Health check" }] },
   {
     label: "Content",
     items: [
-      { to: "/admin/products", label: "পণ্য / Products" },
-      { to: "/admin/articles", label: "নিবন্ধ / Articles" },
-      { to: "/admin/page-sections", label: "পৃষ্ঠা বিভাগ / Page sections" },
-      { to: "/admin/navigation", label: "নেভিগেশন / Navigation" },
-      { to: "/admin/shell-story", label: "খোলসের গল্প / Shell Story" },
-      { to: "/admin/categories", label: "বিভাগ / Categories" },
-      { to: "/admin/product-categories", label: "পণ্য বিভাগ / Product categories" },
-      { to: "/admin/team", label: "টিম / Team" },
-      { to: "/admin/journey", label: "যাত্রা / Journey" },
-      { to: "/admin/research", label: "গবেষণা / Research" },
-      { to: "/admin/testing", label: "পরীক্ষার ফলাফল / Test results" },
-      { to: "/admin/impact", label: "প্রভাব / Impact stats" },
-      { to: "/admin/community", label: "কমিউনিটি / Community" },
-      { to: "/admin/testimonials", label: "মতামত / Testimonials" },
-      { to: "/admin/faqs", label: "প্রশ্নোত্তর / FAQs" },
-      { to: "/admin/partners", label: "অংশীদার / Partners" },
-      { to: "/admin/downloads", label: "ডাউনলোড / Downloads" },
-      { to: "/admin/media", label: "মিডিয়া / Media" },
+      { to: "products", label: "পণ্য / Products" },
+      { to: "articles", label: "নিবন্ধ / Articles" },
+      { to: "page-sections", label: "পৃষ্ঠা বিভাগ / Page sections" },
+      { to: "site-text", label: "সাইটের লেখা / Site Text" },
+      { to: "navigation", label: "নেভিগেশন / Navigation" },
+      { to: "shell-story", label: "খোলসের গল্প / Shell Story" },
+      { to: "categories", label: "বিভাগ / Categories" },
+      { to: "product-categories", label: "পণ্য বিভাগ / Product categories" },
+      { to: "team", label: "টিম / Team" },
+      { to: "journey", label: "যাত্রা / Journey" },
+      { to: "research", label: "গবেষণা / Research" },
+      { to: "testing", label: "পরীক্ষার ফলাফল / Test results" },
+      { to: "impact", label: "প্রভাব / Impact stats" },
+      { to: "community", label: "কমিউনিটি / Community" },
+      { to: "testimonials", label: "মতামত / Testimonials" },
+      { to: "faqs", label: "প্রশ্নোত্তর / FAQs" },
+      { to: "partners", label: "অংশীদার / Partners" },
+      { to: "downloads", label: "ডাউনলোড / Downloads" },
+      { to: "media", label: "মিডিয়া / Media" },
     ],
   },
   {
     label: "Operations",
     items: [
-      { to: "/admin/orders", label: "অর্ডার / Orders" },
-      { to: "/admin/messages", label: "বার্তা / Messages" },
-      { to: "/admin/subscribers", label: "সাবস্ক্রাইবার / Subscribers" },
-      { to: "/admin/audit", label: "অডিট লগ / Audit log" },
-      { to: "/admin/users", label: "ব্যবহারকারী / Users" },
+      { to: "orders", label: "অর্ডার / Orders" },
+      { to: "messages", label: "বার্তা / Messages" },
+      { to: "subscribers", label: "সাবস্ক্রাইবার / Subscribers" },
+      { to: "audit", label: "অডিট লগ / Audit log" },
+      { to: "users", label: "ব্যবহারকারী / Users" },
     ],
   },
 ];
@@ -63,8 +65,8 @@ export default function AdminLayout({ onLogout }: { onLogout: () => void }) {
                 {group.items.map((item) => (
                   <NavLink
                     key={item.to}
-                    to={item.to}
-                    end={item.to === "/admin"}
+                    to={adminHref(item.to)}
+                    end={!item.to}
                     className={({ isActive }) =>
                       cn(
                         "flex items-center justify-between rounded-lg px-2.5 py-2 text-ink-muted transition hover:bg-bg-soft",
@@ -73,13 +75,13 @@ export default function AdminLayout({ onLogout }: { onLogout: () => void }) {
                     }
                   >
                     <span>{item.label}</span>
-                    {item.to === "/admin/orders" && newOrders > 0 && (
+                    {item.to === "orders" && newOrders > 0 && (
                       <span className="rounded-full bg-coral px-1.5 text-[10px] font-bold text-white">{newOrders}</span>
                     )}
-                    {item.to === "/admin/messages" && unread > 0 && (
+                    {item.to === "messages" && unread > 0 && (
                       <span className="rounded-full bg-coral px-1.5 text-[10px] font-bold text-white">{unread}</span>
                     )}
-                    {item.to === "/admin/articles" && drafts > 0 && (
+                    {item.to === "articles" && drafts > 0 && (
                       <span className="rounded-full bg-sand px-1.5 text-[10px] font-bold text-ink">{drafts}</span>
                     )}
                   </NavLink>

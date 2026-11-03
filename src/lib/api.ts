@@ -21,6 +21,7 @@ import type {
   Product,
   ResearchItem,
   Settings,
+  SiteText,
   ShellPart,
   Subscriber,
   TeamMember,
@@ -232,6 +233,41 @@ export async function reorderProducts(orderedIds: string[]): Promise<void> {
 
 // ---- Generic collection helpers for simple admin-managed tables --------
 
+export async function listSiteTexts(): Promise<SiteText[]> {
+  if (hasSupabase && supabase) {
+    const { data, error } = await supabase.from("site_texts").select("*").order("group").order("key");
+    if (error) throw error;
+    return (data ?? []) as SiteText[];
+  }
+  return clone(getDb().site_texts).sort((a, b) => a.group.localeCompare(b.group) || a.key.localeCompare(b.key));
+}
+
+export async function saveSiteText(text: SiteText): Promise<SiteText> {
+  if (hasSupabase && supabase) {
+    const { data, error } = await supabase.from("site_texts").upsert(text, { onConflict: "key" }).select("*").single();
+    if (error) throw error;
+    return data as SiteText;
+  }
+  return mutateDb((db) => {
+    const index = db.site_texts.findIndex((item) => item.key === text.key);
+    if (index < 0) db.site_texts.push(text);
+    else db.site_texts[index] = text;
+    return text;
+  });
+}
+
+export async function deleteSiteText(key: string): Promise<void> {
+  if (hasSupabase && supabase) {
+    const { error } = await supabase.from("site_texts").delete().eq("key", key);
+    if (error) throw error;
+    return;
+  }
+  mutateDb((db) => {
+    db.site_texts = db.site_texts.filter((item) => item.key !== key);
+    return undefined;
+  });
+}
+
 export type SimpleTable =
   | "article_categories"
   | "product_categories"
@@ -255,7 +291,10 @@ export async function listSimple<T extends { id: string; sort_order?: number }>(
 ): Promise<T[]> {
   if (hasSupabase && supabase) {
     const select = table === "community_visits" ? "*, photos:community_photos(*)" : "*";
-    let query = supabase.from(table).select(select);
+    const sourceTable = table === "team_members" && !options.includeUnpublished
+      ? "team_members_public"
+      : table;
+    let query = supabase.from(sourceTable).select(select);
     if (table === "team_members") query = query.eq("group_type", "team");
     if (table === "page_sections" || table === "nav_items" || table === "shell_parts") {
       if (!options.includeUnpublished) query = query.eq("is_visible", true);
@@ -995,6 +1034,8 @@ export interface HealthCheck {
   database: boolean;
   storage: boolean;
   adminRole: boolean;
+  superAdmin: boolean;
+  mfaAssurance: "aal1" | "aal2" | null;
   publishedProducts: number;
   publishedArticles: number;
   missingSettings: string[];
@@ -1024,6 +1065,8 @@ export async function getHealthCheck(): Promise<HealthCheck> {
       if (!String(settingsMap[key] ?? "").trim()) missingSettings.push(key.replace("social_", "") + " link");
     }
     let adminRole = false;
+    let superAdmin = false;
+    let mfaAssurance: "aal1" | "aal2" | null = null;
     if (auth.data.user) {
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
@@ -1031,12 +1074,22 @@ export async function getHealthCheck(): Promise<HealthCheck> {
         .eq("id", auth.data.user.id)
         .maybeSingle();
       if (profileError) throw profileError;
-      adminRole = !!profile;
+      adminRole = profile?.role === "super_admin" || profile?.role === "editor";
+      superAdmin = profile?.role === "super_admin";
+      if (superAdmin) {
+        const { data: assurance, error: assuranceError } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+        if (assuranceError) throw assuranceError;
+        if (assurance.currentLevel === "aal2") mfaAssurance = "aal2";
+        else if (assurance.currentLevel === "aal1") mfaAssurance = "aal1";
+        else mfaAssurance = null;
+      }
     }
     return {
       database: true,
       storage: true,
       adminRole,
+      superAdmin,
+      mfaAssurance,
       publishedProducts: products.count ?? 0,
       publishedArticles: articles.count ?? 0,
       missingSettings,
@@ -1053,6 +1106,8 @@ export async function getHealthCheck(): Promise<HealthCheck> {
     database: true,
     storage: true,
     adminRole: sessionStorage.getItem("shonjibon.admin.authed") === "1",
+    superAdmin: false,
+    mfaAssurance: null,
     publishedProducts: db.products.filter((product) => product.is_published).length,
     publishedArticles: db.articles.filter((article) => article.status === "published").length,
     missingSettings,

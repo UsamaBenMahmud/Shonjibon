@@ -68,7 +68,8 @@ npm run dev        # http://localhost:5173
 ```
 
 The site works immediately with **no environment variables** — it runs fully on the seeded mock
-database in your browser's localStorage. Visit `/admin` and log in with `shonjibon2026`.
+database in your browser's localStorage. Visit `/control-room` and log in with `shonjibon2026`.
+For isolated UI checks when `.env.local` contains Supabase credentials, set `VITE_USE_MOCK_DB=true`.
 
 ---
 
@@ -80,6 +81,9 @@ database in your browser's localStorage. Visit `/admin` and log in with `shonjib
    `supabase/005_audit_trigger_fix.sql`, `supabase/migrations/004_upgrade.sql`,
    `supabase/006_test_result_sample_guard.sql`, `supabase/007_brand_impact_shell_team.sql`,
    `supabase/008_customer_accounts_security.sql`,
+   `supabase/009_team_public_contacts.sql`,
+   `supabase/010_customer_signup_phone.sql`,
+   `supabase/011_site_texts.sql`,
    then `supabase/seed.sql`.
 3. Copy `.env.example` to `.env` and fill in your project's values:
 
@@ -134,7 +138,9 @@ insert into profiles (id, full_name, email, role)
 values ('00000000-0000-0000-0000-000000000000', 'Admin', 'admin@example.com', 'super_admin');
 ```
 
-Log in at `/admin` with that user's email/password.
+Log in at the configured admin URL (default `/control-room`) with that user's email/password.
+Set `VITE_ADMIN_PATH` before building to change the route; it is deliberately not linked from public
+navigation and the route sets `noindex,nofollow`.
 
 Customers can create accounts at `/account`, save delivery addresses and products, and see orders
 created while signed in. The account profile is created by the `auth.users` trigger. Admin routes
@@ -165,7 +171,7 @@ npm run preview      # sanity-check the production build locally
 5. In Supabase **Authentication → URL Configuration**, set the production website URL and add the
    Vercel URL to the allowed redirect URLs.
 6. Deploy. The included `vercel.json` rewrites client-side routes to the app entry point so paths
-   such as `/admin` work when opened directly.
+   such as `/control-room` work when opened directly.
 
 Use the Supabase backend for a shared live demo. Without those environment variables, the app uses
 browser-local demo data, which is not shared between teammates and is not suitable for production.
@@ -188,24 +194,24 @@ chunks so admin, Tiptap, Recharts, and drag-and-drop code do not need to be in t
 - The **Research** and **Filter product** pages always show: *"Does not remove salinity; pair with
   rainwater harvesting and SODIS solar disinfection for germs."*
 - Any invented number, quote, or test value carries `is_sample: true` / `status: "sample"` and
-  renders a small **"Sample data"** badge until an admin marks it verified in `/admin/testing` or the
+  renders a small **"Sample data"** badge until an admin marks it verified in `/control-room/testing` or the
   relevant manager.
 
 ---
 
 ## 8. 10-point test checklist
 
-1. **Language toggle** — switch বাং/EN from the header on every single page (including `/admin`
+1. **Language toggle** — switch বাং/EN from the header on every single page (including `/control-room`
    login) and confirm text, numbers, and dates update instantly and persist on reload.
 2. **Bangla rendering** — conjuncts like ক্ষ, জ্ঞ, ত্ত (see FAQ and Research pages) render as single
    glyphs, not broken/boxed characters, in Noto Sans Bengali.
 3. **Mobile layout** — at 375px width: slim header, hamburger opens a full-screen menu, cart drawer,
    journey timeline scroll-snaps horizontally, masonry gallery reflows to 2 columns.
-4. **Admin → public sync** — edit a product or article in `/admin`, save, then revisit the public
+4. **Admin → public sync** — edit a product or article in `/control-room`, save, then revisit the public
    page (TanStack Query cache is invalidated on save) and confirm the change appears without a hard
    refresh.
 5. **Full order flow** — add 2+ products to the cart, checkout with the required fields, land on
-   `/order-success/SJ-2026-xxxx`, then confirm the order appears in `/admin/orders` with items and
+   `/order-success/SJ-2026-xxxx`, then confirm the order appears in `/control-room/orders` with items and
    total.
 6. **Every image loads** — no broken `<img>` icons anywhere; all seed content uses inline SVG/gradient
    illustrations as graceful fallbacks if a URL is empty.
@@ -213,7 +219,7 @@ chunks so admin, Tiptap, Recharts, and drag-and-drop code do not need to be in t
    mention is a limitation/disclaimer, never a claim of removal.
 8. **Accessibility** — tab through the header, mobile menu, and checkout form using only the
    keyboard; focus rings should be visible everywhere; images have alt text.
-9. **Drag-and-drop reorder** — in any generic admin manager (e.g. `/admin/faqs`), drag a row by its
+9. **Drag-and-drop reorder** — in any generic admin manager (e.g. `/control-room/faqs`), drag a row by its
    handle and confirm the new order persists after reload.
 10. **Honeypot & validation** — submit the Contact or Checkout form with invalid data (e.g. missing
     phone) and confirm plain-language bilingual errors appear; the hidden `company` field blocks bot
@@ -221,9 +227,30 @@ chunks so admin, Tiptap, Recharts, and drag-and-drop code do not need to be in t
 
 ---
 
-## 9. Admin quick reference
+## 9. Admin setup, MFA, and security checklist
 
-- URL: `/admin` (fully lazy-loaded, separate from the public bundle in source).
+- Set `VITE_ADMIN_PATH` to an unguessable path before the production build. Changing it is not a
+  substitute for authentication; admin records remain protected by Supabase RLS and role checks.
+- Assign `super_admin` only to the intended administrator in `profiles`; use `editor` only for
+  explicitly trusted staff. Customers cannot change their own role.
+- Admin pages enforce a 30-minute idle timeout in the current browser session. This client-side
+  timeout complements, but does not replace, server-side session and role enforcement.
+- Deploy all numbered SQL files in sequence through `011_site_texts.sql` before using the Site Text
+  manager and newest team/customer signup fields.
+- Use `npm run check:secrets` before release. Never put service-role, payment, or email credentials
+  in a `VITE_*` setting.
+- Vercel applies CSP, HSTS, frame, MIME, referrer, and permissions headers. Verify the deployed
+  response headers after deployment.
+- The admin login now requires a verified TOTP factor for `super_admin` accounts and checks for
+  Supabase AAL2 before showing the admin app. First login enrolls a TOTP factor. This is a client
+  access gate; it does not yet add AAL2 requirements to every RLS policy or Edge Function, so
+  configure and verify server-side MFA enforcement before production use.
+- Re-test the admin route, RLS policies, storage policies, account recovery, and a backup restore in
+  the deployed Supabase project. Local mock mode is a demo only and is not an authorization system.
+
+## 10. Admin quick reference
+
+- URL: `VITE_ADMIN_PATH` (default `/control-room`; fully lazy-loaded).
 - Mock mode password: `shonjibon2026` (change under **Settings**).
 - **Settings** also has **Export/Import JSON backup** and **Reset to demo data** (mock mode only).
 - `Ctrl/Cmd + S` inside a content form is a best-effort shortcut users will expect — submit buttons

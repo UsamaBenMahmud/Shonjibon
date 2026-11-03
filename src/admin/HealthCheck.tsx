@@ -30,6 +30,9 @@ export default function HealthCheck() {
             <CheckRow label="Database connected / ডেটাবেস সংযুক্ত" ok={health.database} />
             <CheckRow label="Storage reachable / স্টোরেজ সচল" ok={health.storage} />
             <CheckRow label="Admin role detected / অ্যাডমিন অনুমতি" ok={health.adminRole} />
+            {health.superAdmin && (
+              <CheckRow label="Super-admin MFA assurance (AAL2)" ok={health.mfaAssurance === "aal2"} />
+            )}
           </section>
           <section className="card space-y-2 p-5">
             <h2 className="font-display text-lg font-semibold text-ink">Published content / প্রকাশিত কনটেন্ট</h2>

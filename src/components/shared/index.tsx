@@ -30,27 +30,18 @@ export function Logo({
 }) {
   const settingsQ = useQuery({ queryKey: ["settings"], queryFn: getSettings, staleTime: 5 * 60 * 1000, retry: false });
   const branding = brandingOverride ?? { ...defaultBranding, ...settingsQ.data?.branding };
-  const useFullLogo = Boolean(branding.logo_full_url && !branding.use_mark_only && !branding.logo_mark_url);
-  const mark = branding.logo_mark_url || "/brand-mark.png";
-  const darkMark = branding.logo_dark_url || mark;
-  const height = Math.min(64, Math.max(28, branding.logo_height || 40));
+  const mark = branding.logo_mark_url || "/favicon.svg";
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
-      {useFullLogo
-        ? <>
-            <img src={branding.logo_full_url} alt="" aria-hidden="true" className="h-auto shrink-0 object-contain dark:hidden" style={{ height, maxWidth: height * 3.2 }} />
-            <img src={branding.logo_dark_url || branding.logo_full_url} alt="" aria-hidden="true" className="hidden h-auto shrink-0 object-contain dark:block" style={{ height, maxWidth: height * 3.2 }} />
-          </>
-        : <span className="relative shrink-0" style={{ width: height, height }}>
-            <img src={mark} alt="" aria-hidden="true" data-preserve-brightness="true" className="logo-mark-light h-full w-full object-contain" />
-            <img src={darkMark} alt="" aria-hidden="true" data-preserve-brightness="true" className="logo-mark-dark absolute inset-0 hidden h-full w-full object-contain" />
-          </span>}
-      {withWordmark && (branding.show_bangla_name ? (
+      <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center">
+        <img src={mark} alt="Shonjibon logo" width={40} height={40} loading="eager" className="h-9 w-9 object-contain" />
+      </span>
+      {withWordmark && (
         <span className="flex min-w-0 flex-col leading-tight">
-          <span className="font-bn text-[22px] font-bold text-ink" lang="bn">{branding.name_bn || defaultBranding.name_bn}</span>
-          {!useFullLogo && <span className="hidden text-[11px] font-semibold tracking-wide text-ink-muted sm:block">{branding.name_en || defaultBranding.name_en}</span>}
+          <span className="font-display text-lg font-bold text-ink">{branding.name_en || defaultBranding.name_en}</span>
+          {branding.show_bangla_name && <span className="font-bn text-xs font-medium text-ink-muted" lang="bn">{branding.name_bn || defaultBranding.name_bn}</span>}
         </span>
-      ) : <span className="font-display text-xl font-semibold text-ink">{branding.name_en || defaultBranding.name_en}</span>)}
+      )}
     </span>
   );
 }
@@ -103,13 +94,15 @@ export function Section({
 
 export function SEO({ title, description, image }: { title: string; description?: string; image?: string }) {
   const full = `${title} · সঞ্জীবন Shonjibon`;
+  const settingsQ = useQuery({ queryKey: ["settings"], queryFn: getSettings, staleTime: 5 * 60 * 1000, retry: false });
+  const socialImage = image || settingsQ.data?.branding?.logo_full_url || "/brand/logo-full.png";
   return (
     <Helmet>
       <title>{full}</title>
       {description && <meta name="description" content={description} />}
       <meta property="og:title" content={full} />
       {description && <meta property="og:description" content={description} />}
-      {image && <meta property="og:image" content={image} />}
+      <meta property="og:image" content={socialImage} />
     </Helmet>
   );
 }
@@ -150,12 +143,14 @@ export function Lightbox({
       >
         <CloseIcon />
       </button>
-      <img
-        src={current.url}
-        alt={current.caption ?? ""}
-        className="max-h-[75vh] max-w-full rounded-2xl object-contain"
-        loading="lazy"
-      />
+      {current.url && (
+        <img
+          src={current.url}
+          alt={current.caption ?? ""}
+          className="max-h-[75vh] max-w-full rounded-2xl object-contain"
+          loading="lazy"
+        />
+      )}
       {current.caption && <p className="max-w-lg text-center text-sm text-white/90">{current.caption}</p>}
       <div className="flex gap-3">
         <button className="rounded-full bg-white/10 px-4 py-2 text-sm text-white hover:bg-white/20" onClick={() => onNavigate((index - 1 + images.length) % images.length)}>

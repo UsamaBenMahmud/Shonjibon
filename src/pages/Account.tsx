@@ -7,6 +7,7 @@ import {
   accountAddressSchema,
   accountLoginSchema,
   accountSignupSchema,
+  type AccountSignupInput,
 } from "@/lib/schemas";
 import {
   createMockAccount,
@@ -20,6 +21,7 @@ import {
 import type { Order } from "@/lib/types";
 import { getDb } from "@/lib/mockDb";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { Logo } from "@/components/shared";
 
 type AccountAddress = MockAddress & { user_id?: string; created_at?: string };
 type AccountWishlistItem = {
@@ -38,6 +40,10 @@ export default function Account() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [recoveryMode, setRecoveryMode] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
   const [addressForm, setAddressForm] = useState({ label: "Home", recipient_name: "", phone: "", address: "", district: "" });
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
@@ -84,6 +90,9 @@ export default function Account() {
       void refreshAccount(getMockAccount()).catch((cause: unknown) => setError(errorText(cause)));
       return;
     }
+    if (new URLSearchParams(window.location.hash.slice(1)).get("type") === "recovery") {
+      setRecoveryMode(true);
+    }
     let active = true;
     supabase.auth.getSession().then(async ({ data, error: sessionError }) => {
       if (sessionError) throw sessionError;
@@ -102,7 +111,8 @@ export default function Account() {
     }).catch((cause: unknown) => {
       if (active) setError(errorText(cause));
     });
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "PASSWORD_RECOVERY") setRecoveryMode(true);
       if (!session) {
         if (active) void refreshAccount(null).catch((cause: unknown) => setError(errorText(cause)));
       } else if (active) {
@@ -134,7 +144,7 @@ export default function Account() {
     setError("");
     setNotice("");
     const parsed = mode === "sign_up"
-      ? accountSignupSchema.safeParse({ full_name: name, email, password })
+      ? accountSignupSchema.safeParse({ full_name: name, email, password, phone, termsAccepted: acceptedTerms })
       : accountLoginSchema.safeParse({ email, password });
     if (!parsed.success) {
       setError(parsed.error.issues[0]?.message ?? "তথ্য যাচাই করুন / Please check the form");
@@ -144,11 +154,11 @@ export default function Account() {
     try {
       if (hasSupabase && supabase) {
         if (mode === "sign_up") {
-          const values = parsed.data as typeof parsed.data & { full_name: string };
+          const values = parsed.data as AccountSignupInput;
           const { data, error: signUpError } = await supabase.auth.signUp({
             email: values.email,
             password: values.password,
-            options: { data: { full_name: values.full_name } },
+            options: { data: { full_name: values.full_name, phone: values.phone || "" } },
           });
           if (signUpError) throw signUpError;
           if (!data.session) {
@@ -164,8 +174,8 @@ export default function Account() {
           if (signInError) throw signInError;
         }
       } else if (mode === "sign_up") {
-        const values = parsed.data as typeof parsed.data & { full_name: string };
-        const created = await createMockAccount(values.email, values.full_name, values.password);
+        const values = parsed.data as AccountSignupInput;
+        const created = await createMockAccount(values.email, values.full_name, values.password, values.phone);
         await refreshAccount(created);
         setNotice("অ্যাকাউন্ট তৈরি হয়েছে / Account created");
       } else {
@@ -199,6 +209,31 @@ export default function Account() {
       });
       if (resetError) throw resetError;
       setNotice("পাসওয়ার্ড রিসেট লিংক পাঠানো হয়েছে / Password reset email sent");
+    } catch (cause) {
+      setError(errorText(cause));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function updateRecoveredPassword(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!supabase) return;
+    const parsed = accountSignupSchema.shape.password.safeParse(newPassword);
+    if (!parsed.success) {
+      setError(parsed.error.issues[0]?.message ?? "পাসওয়ার্ড যাচাই করুন / Check your password");
+      return;
+    }
+    setBusy(true);
+    setError("");
+    setNotice("");
+    try {
+      const { error: updateError } = await supabase.auth.updateUser({ password: parsed.data });
+      if (updateError) throw updateError;
+      setRecoveryMode(false);
+      setNewPassword("");
+      window.history.replaceState({}, document.title, `${window.location.pathname}${window.location.search}`);
+      setNotice("পাসওয়ার্ড পরিবর্তন হয়েছে / Password updated successfully");
     } catch (cause) {
       setError(errorText(cause));
     } finally {
@@ -326,15 +361,37 @@ export default function Account() {
         <SectionHeading title="অ্যাকাউন্ট / My account" body="Manage your profile, delivery addresses, saved products, and order history." />
         {error && <p role="alert" className="mt-5 rounded-xl border border-coral/30 bg-coral/10 p-3 text-sm text-coral-text">{error}</p>}
         {notice && <p role="status" className="mt-5 rounded-xl border border-teal/30 bg-teal/10 p-3 text-sm text-teal-dark">{notice}</p>}
-        {!user ? (
+        {recoveryMode ? (
+          <form onSubmit={updateRecoveredPassword} className="card mt-8 max-w-xl space-y-4 p-5">
+            <h2 className="font-display text-lg font-semibold text-ink">Set a new password</h2>
+            <FieldWrap label="New password (minimum 10 characters)" required>
+              <Input
+                type="password"
+                value={newPassword}
+                onChange={(event) => setNewPassword(event.target.value)}
+                autoComplete="new-password"
+                required
+              />
+            </FieldWrap>
+            <Button type="submit" disabled={busy}>{busy ? "Please wait…" : "Update password"}</Button>
+          </form>
+        ) : !user ? (
           <form onSubmit={submitAuth} className="card mt-8 max-w-xl space-y-4 p-5" noValidate>
+            <Logo />
             <div className="flex gap-2 border-b border-border pb-3">
               <button type="button" onClick={() => setMode("sign_in")} className={mode === "sign_in" ? "font-semibold text-teal-dark" : "text-ink-muted"}>Sign in</button>
               <button type="button" onClick={() => setMode("sign_up")} className={mode === "sign_up" ? "font-semibold text-teal-dark" : "text-ink-muted"}>Create account</button>
             </div>
             {mode === "sign_up" && <FieldWrap label="Full name" required><Input value={name} onChange={(event) => setName(event.target.value)} autoComplete="name" /></FieldWrap>}
+            {mode === "sign_up" && <FieldWrap label="Phone (optional)"><Input type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} autoComplete="tel" /></FieldWrap>}
             <FieldWrap label="Email" required><Input type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" /></FieldWrap>
-            <FieldWrap label="Password (minimum 8 characters)" required><Input type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={mode === "sign_up" ? "new-password" : "current-password"} /></FieldWrap>
+            <FieldWrap label={mode === "sign_up" ? "Password (minimum 10 characters)" : "Password"} required><Input type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={mode === "sign_up" ? "new-password" : "current-password"} /></FieldWrap>
+            {mode === "sign_up" && (
+              <label className="flex items-start gap-2 text-sm leading-relaxed text-ink-muted">
+                <input type="checkbox" checked={acceptedTerms} onChange={(event) => setAcceptedTerms(event.target.checked)} className="mt-1 accent-teal" />
+                <span>I accept the <Link to="/terms" className="text-teal-dark underline">Terms</Link> and <Link to="/privacy" className="text-teal-dark underline">Privacy Policy</Link>.</span>
+              </label>
+            )}
             <Button type="submit" disabled={busy}>{busy ? "Please wait…" : mode === "sign_up" ? "Create account" : "Sign in"}</Button>
             {mode === "sign_in" && <button type="button" onClick={() => void sendPasswordReset()} disabled={busy} className="ml-3 text-sm text-teal-dark underline">Forgot password?</button>}
             <p className="text-xs leading-relaxed text-ink-muted">Your account is used for order history, saved products, and delivery addresses. Mock-mode accounts are stored only in this browser.</p>

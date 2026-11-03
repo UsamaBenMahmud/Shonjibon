@@ -57,9 +57,26 @@ export async function sendResendEmail(
       to: [to],
       subject,
       text,
+      html: brandedEmailHtml(text),
     }),
   });
   if (!response.ok) throw new Error(`Resend request failed with status ${response.status}`);
+}
+
+function brandedEmailHtml(text: string): string {
+  const siteUrl = Deno.env.get("SITE_URL")?.replace(/\/+$/, "");
+  const logo = siteUrl
+    ? `<img src="${siteUrl}/brand/logo-full.png" width="220" alt="Shonjibon" style="display:block;height:auto;max-width:100%;margin-bottom:20px">`
+    : "";
+  const entities: Record<string, string> = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  };
+  const escaped = text.replace(/[&<>"']/g, (character) => entities[character] ?? character);
+  return `<div style="font-family:Arial,sans-serif;color:#08333f">${logo}<pre style="white-space:pre-wrap;font:inherit">${escaped}</pre></div>`;
 }
 
 export function isEmail(value: unknown): value is string {

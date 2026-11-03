@@ -15,40 +15,34 @@ import { Section, SectionHeading, SEO, Container } from "@/components/shared";
 import { Accordion, Button, FieldWrap, Input, Textarea } from "@/components/ui";
 import { useUIStore } from "@/store/ui";
 import { bdPhoneHref, formatBdPhone } from "@/lib/utils";
-
-function Avatar({ name, photo }: { name: string; photo?: string }) {
-  if (photo) return <img src={photo} alt={name} className="h-20 w-20 rounded-full object-cover" width={80} height={80} />;
-  const initials = name.split(" ").map((w) => w[0]).slice(0, 2).join("");
-  return (
-    <div className="flex h-20 w-20 items-center justify-center rounded-full bg-teal/10 font-display text-xl font-semibold text-teal-dark">
-      {initials}
-    </div>
-  );
-}
+import { TeamCarousel } from "@/components/shared/TeamCarousel";
 
 function TeamPage() {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const lang = i18n.resolvedLanguage === "en" ? "en" : "bn";
+  const settingsQ = useQuery({ queryKey: ["settings"], queryFn: getSettings });
   const teamQ = useQuery({ queryKey: ["team_members"], queryFn: () => listSimple<TeamMember>("team_members") });
-  const members = teamQ.data ?? [];
-  const core = members.filter((m) => m.group_type === "team");
+  const core = (teamQ.data ?? []).filter((m) => m.group_type === "team");
+  const settings = settingsQ.data;
+  const title = lang === "en" ? settings?.team_title_en : settings?.team_title_bn;
+  const subtitle = lang === "en" ? settings?.team_subtitle_en : settings?.team_subtitle_bn;
+  const description = lang === "en" ? settings?.team_description_en : settings?.team_description_bn;
+  const defaultTitle = lang === "en" ? "Our Team" : "আমাদের টিম";
+  const defaultSubtitle = lang === "en" ? "The Minds Behind Shonjibon" : "সঞ্জীবনের পেছনের মানুষেরা";
+  const defaultDescription = lang === "en"
+    ? "A small team on a big mission: turning waste into clean water with science, design, and care."
+    : "ছোট একটি দল, বড় একটি লক্ষ্য: বিজ্ঞান, নকশা ও যত্ন দিয়ে বর্জ্যকে বিশুদ্ধ পানিতে রূপ দেওয়া।";
 
   return (
     <>
-      <SEO title={t("team.title")} description={t("team.subtitle")} />
+      <SEO title={title || defaultTitle} description={description || defaultDescription} />
       <Section>
-        <SectionHeading title={t("team.title")} body={t("team.subtitle")} align="center" />
-        <h3 className="mt-10 mb-5 font-display text-lg font-semibold text-ink">{t("team.coreTeam")}</h3>
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
-          {core.map((m) => (
-            <div key={m.id} className="flex flex-col items-center gap-2 text-center">
-              <Avatar name={m.name} photo={m.photo_url} />
-              <p className="font-medium text-ink">{m.name}</p>
-              <p className="text-xs text-ink-muted">{t2(m, "title", lang)}</p>
-              <p className="text-xs text-ink-muted/70">{m.department}</p>
-            </div>
-          ))}
+        <div className="mx-auto max-w-2xl space-y-3 text-center">
+          <h1 className="font-display text-3xl font-semibold text-ink sm:text-4xl">{title || defaultTitle}</h1>
+          <p className="font-display text-xl font-semibold text-ink">{subtitle || defaultSubtitle}</p>
+          <p className="leading-relaxed text-ink-muted">{description || defaultDescription}</p>
         </div>
+        <TeamCarousel members={core} lang={lang} />
       </Section>
     </>
   );

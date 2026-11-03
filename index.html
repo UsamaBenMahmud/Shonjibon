@@ -4,16 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0B3F4F" />
-    <script>
-      (() => {
-        const saved = localStorage.getItem("theme") || "system";
-        const dark = saved === "dark" || (saved === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
-        document.documentElement.classList.toggle("dark", dark);
-        document.querySelector('meta[name="theme-color"]')?.setAttribute("content", dark ? "#04141a" : "#0b3d4a");
-        const language = localStorage.getItem("shonjibon.lang");
-        if (language === "bn" || language === "en") document.documentElement.lang = language;
-      })();
-    </script>
+    <script src="/theme-init.js"></script>
     <title>সঞ্জীবন | Shonjibon — বর্জ্য থেকে নতুন জীবন</title>
     <meta
       name="description"
@@ -22,7 +13,7 @@
     <meta property="og:title" content="সঞ্জীবন | Shonjibon — বর্জ্য থেকে নতুন জীবন" />
     <meta property="og:description" content="Shrimp-shell waste to chitosan: a low-cost, electricity-free, gravity-fed water filter for arsenic-affected coastal Bangladesh." />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/og-image.svg" />
+    <meta property="og:image" content="/brand/logo-full.png" />
     <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

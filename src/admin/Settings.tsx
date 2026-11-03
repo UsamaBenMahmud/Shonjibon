@@ -189,6 +189,18 @@ export default function Settings() {
       </section>
 
       <section className="card space-y-4 p-5">
+        <h2 className="font-display text-lg font-semibold text-ink">টিম পরিচিতি / Team introduction</h2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <FieldWrap label="Heading (EN)"><Input value={form.team_title_en ?? ""} onChange={(e) => set("team_title_en", e.target.value)} /></FieldWrap>
+          <FieldWrap label="শিরোনাম (বাং)"><Input value={form.team_title_bn ?? ""} onChange={(e) => set("team_title_bn", e.target.value)} /></FieldWrap>
+          <FieldWrap label="Subheading (EN)"><Input value={form.team_subtitle_en ?? ""} onChange={(e) => set("team_subtitle_en", e.target.value)} /></FieldWrap>
+          <FieldWrap label="উপশিরোনাম (বাং)"><Input value={form.team_subtitle_bn ?? ""} onChange={(e) => set("team_subtitle_bn", e.target.value)} /></FieldWrap>
+          <FieldWrap label="Introduction (EN)"><Textarea rows={3} value={form.team_description_en ?? ""} onChange={(e) => set("team_description_en", e.target.value)} /></FieldWrap>
+          <FieldWrap label="পরিচিতি (বাং)"><Textarea rows={3} value={form.team_description_bn ?? ""} onChange={(e) => set("team_description_bn", e.target.value)} /></FieldWrap>
+        </div>
+      </section>
+
+      <section className="card space-y-4 p-5">
         <h2 className="font-display text-lg font-semibold text-ink">যোগাযোগ ও সোশ্যাল / Contact & social</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <FieldWrap label="Phone"><Input value={form.contact_phone} onChange={(e) => set("contact_phone", e.target.value)} /></FieldWrap>
@@ -222,9 +234,6 @@ export default function Settings() {
           <BrandAssetUpload label="Logo mark (icon only)" value={form.branding?.logo_mark_url ?? ""} onUpload={(file) => uploadBrandAsset("logo_mark_url", file)} />
           <BrandAssetUpload label="Full logo artwork" value={form.branding?.logo_full_url ?? ""} onUpload={(file) => uploadBrandAsset("logo_full_url", file)} />
           <BrandAssetUpload label="Dark-mode logo variant" value={form.branding?.logo_dark_url ?? ""} onUpload={(file) => uploadBrandAsset("logo_dark_url", file)} />
-          <FieldWrap label={`Logo height (${form.branding?.logo_height ?? 40}px)`}>
-            <input className="w-full accent-teal" type="range" min={28} max={64} value={form.branding?.logo_height ?? 40} onChange={(e) => updateBranding("logo_height", Number(e.target.value))} />
-          </FieldWrap>
         </div>
         <label className="flex items-center gap-2 text-sm font-medium text-ink">
           <input type="checkbox" checked={form.branding?.show_bangla_name ?? true} onChange={(e) => updateBranding("show_bangla_name", e.target.checked)} className="accent-teal" />

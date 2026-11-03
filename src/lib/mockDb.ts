@@ -20,6 +20,7 @@ import type {
   ProductCategory,
   ResearchItem,
   Settings,
+  SiteText,
   ShellPart,
   Subscriber,
   TeamMember,
@@ -35,6 +36,7 @@ import { makeDefaultNavItems, makeDefaultPageSections } from "@/lib/pageContent"
 
 export interface DB {
   settings: Settings;
+  site_texts: SiteText[];
   products: Product[];
   product_categories: ProductCategory[];
   article_categories: ArticleCategory[];
@@ -553,6 +555,12 @@ function buildSeed(): DB {
     hero_title_bn: "চিংড়ির খোলস থেকে তৈরি পানি ফিল্টার",
     hero_subtitle_en: "A low-cost, electricity-free filter built with chitosan — helps reduce arsenic, heavy metals and turbidity.",
     hero_subtitle_bn: "কাইটোসান প্রযুক্তিতে তৈরি সাশ্রয়ী, বিদ্যুৎবিহীন ফিল্টার — আর্সেনিক, ভারী ধাতু ও ঘোলাত্ব কমাতে সাহায্য করে।",
+    team_title_en: "Our Team",
+    team_title_bn: "আমাদের টিম",
+    team_subtitle_en: "The Minds Behind Shonjibon",
+    team_subtitle_bn: "সঞ্জীবনের পেছনের মানুষেরা",
+    team_description_en: "A small team on a big mission: turning waste into clean water with science, design, and care.",
+    team_description_bn: "ছোট একটি দল, বড় একটি লক্ষ্য: বিজ্ঞান, নকশা ও যত্ন দিয়ে বর্জ্যকে বিশুদ্ধ পানিতে রূপ দেওয়া।",
     contact_phone: "01620485218",
     contact_email: "usamabenmahmud@gmail.com",
     contact: {
@@ -605,6 +613,7 @@ function buildSeed(): DB {
 
   return {
     settings,
+    site_texts: [],
     products,
     product_categories,
     article_categories,
@@ -660,6 +669,7 @@ export function getDb(): DB {
     db = buildSeed();
     saveRaw(db);
   }
+  db.site_texts ??= [];
   for (const result of db.test_results) {
     if (result.status === "sample") result.is_sample = true;
   }

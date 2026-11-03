@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type {
   Article,
@@ -15,7 +16,8 @@ import { formatDate, formatNumber, t2 } from "@/lib/utils";
 import { Section, SectionHeading, Img } from "@/components/shared";
 import { Badge, Button, Input, SampleBadge } from "@/components/ui";
 import { ProductCard } from "@/components/product";
-import { subscribeNewsletter } from "@/lib/api";
+import { getSettings, subscribeNewsletter } from "@/lib/api";
+import { TeamCarousel } from "@/components/shared/TeamCarousel";
 import { useUIStore } from "@/store/ui";
 import { newsletterSchema } from "@/lib/schemas";
 import { ShellStory } from "@/components/shell/Story";
@@ -307,25 +309,26 @@ function Avatar({ name, photo }: { name: string; photo?: string }) {
 export function TeamPreviewSection({ members }: { members: TeamMember[] }) {
   const { t, i18n } = useTranslation();
   const lang = i18n.resolvedLanguage === "en" ? "en" : "bn";
-  const core = members.filter((m) => m.group_type === "team").slice(0, 6);
+  const settingsQ = useQuery({ queryKey: ["settings"], queryFn: getSettings });
+  const core = members.filter((m) => m.group_type === "team");
   if (!core.length) return null;
+  const settings = settingsQ.data;
+  const title = lang === "en" ? settings?.team_title_en : settings?.team_title_bn;
+  const subtitle = lang === "en" ? settings?.team_subtitle_en : settings?.team_subtitle_bn;
+  const description = lang === "en" ? settings?.team_description_en : settings?.team_description_bn;
   return (
     <Section>
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <SectionHeading title={t("home.teamTitle")} />
+        <SectionHeading
+          title={title || t("home.teamTitle")}
+          body={subtitle || (lang === "en" ? "The Minds Behind Shonjibon" : "সঞ্জীবনের পেছনের মানুষেরা")}
+        />
         <Link to="/team" className="text-sm font-medium text-teal-dark hover:underline">
           {t("actions.seeAll")}
         </Link>
       </div>
-      <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-6">
-        {core.map((m) => (
-          <div key={m.id} className="flex flex-col items-center gap-2 text-center">
-            <Avatar name={m.name} photo={m.photo_url} />
-            <p className="text-sm font-medium text-ink">{m.name}</p>
-            <p className="text-xs text-ink-muted">{t2(m, "title", lang)}</p>
-          </div>
-        ))}
-      </div>
+      {description && <p className="mt-4 max-w-3xl text-sm leading-relaxed text-ink-muted">{description}</p>}
+      <TeamCarousel members={core} lang={lang} />
     </Section>
   );
 }

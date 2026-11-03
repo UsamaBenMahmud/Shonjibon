@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { useCartStore } from "@/store/cart";
 import { useUIStore } from "@/store/ui";
-import { Container, LanguageToggle, Logo, ThemeToggle } from "@/components/shared";
+import { Container, Img, LanguageToggle, Logo, ThemeToggle } from "@/components/shared";
 import { Button } from "@/components/ui";
 import { bdPhoneHref, formatBdPhone, formatCurrency } from "@/lib/utils";
 import { getSettings, listSimple } from "@/lib/api";
@@ -63,10 +63,6 @@ export function Header() {
     })),
   ];
   const contactPhone = settingsQuery.data?.contact?.phone || settingsQuery.data?.contact_phone || "01620485218";
-  const brandName = lang === "bn"
-    ? settingsQuery.data?.branding?.name_bn || "সঞ্জীবন"
-    : settingsQuery.data?.branding?.name_en || "Shonjibon";
-
   return (
     <>
       <a
@@ -77,8 +73,8 @@ export function Header() {
       </a>
       <header className="sticky top-0 z-50 border-b border-border/70 bg-bg/95 backdrop-blur">
         <Container className="flex h-16 items-center justify-between gap-4">
-          <Link to="/" aria-label={`${brandName} home`} className="shrink-0 font-display text-xl font-bold tracking-tight text-teal-dark sm:text-2xl">
-            {brandName}
+          <Link to="/" aria-label="Shonjibon home" className="shrink-0">
+            <Logo branding={settingsQuery.data?.branding} />
           </Link>
           <div className="flex items-center gap-2">
             <LanguageToggle className="hidden sm:flex" />
@@ -121,20 +117,18 @@ export function Header() {
         items={items}
         lang={lang}
         contactPhone={contactPhone}
-        brandName={brandName}
       />
       <CartDrawer />
     </>
   );
 }
 
-function MobileMenu({ open, onClose, items, lang, contactPhone, brandName }: {
+function MobileMenu({ open, onClose, items, lang, contactPhone }: {
   open: boolean;
   onClose: () => void;
   items: NavItem[];
   lang: "bn" | "en";
   contactPhone: string;
-  brandName: string;
 }) {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -153,7 +147,7 @@ function MobileMenu({ open, onClose, items, lang, contactPhone, brandName }: {
   return (
     <div className="fixed inset-0 z-[60] bg-bg" role="dialog" aria-modal="true">
       <Container className="flex h-16 items-center justify-between border-b border-border/70">
-        <Link to="/" onClick={onClose} className="font-display text-xl font-bold tracking-tight text-teal-dark">{brandName}</Link>
+        <Link to="/" onClick={onClose} aria-label="Shonjibon home"><Logo /></Link>
         <div className="flex items-center gap-3">
           <LanguageToggle />
           <ThemeToggle />
@@ -191,9 +185,6 @@ function MobileMenu({ open, onClose, items, lang, contactPhone, brandName }: {
             </section>
           );
         })}
-        <Link to="/admin" onClick={onClose} className="mt-4 px-4 text-sm text-ink-muted hover:text-teal-dark">
-          {t("nav.admin")} →
-        </Link>
       </Container>
       <div className="fixed inset-x-0 bottom-0 grid grid-cols-2 gap-3 border-t border-border bg-surface p-4">
         <a href={bdPhoneHref(contactPhone)} className="btn-secondary" dir="ltr">☎ {formatBdPhone(contactPhone)}</a>
@@ -237,7 +228,7 @@ function CartDrawer() {
             <div className="flex-1 space-y-4 overflow-y-auto">
               {lines.map((line) => (
                 <div key={line.productId} className="flex gap-3 rounded-xl border border-border p-3">
-                  <img src={line.image} alt="" className="h-16 w-16 rounded-lg object-cover" width={64} height={64} />
+                  <Img src={line.image} alt="" className="h-16 w-16 rounded-lg object-cover" width={64} height={64} />
                   <div className="flex-1 space-y-1">
                     <p className="text-sm font-medium text-ink">{lang === "bn" ? line.name_bn : line.name_en}</p>
                     <p className="text-sm text-teal-dark">{formatCurrency(line.price, line.currency, lang)}</p>
@@ -305,14 +296,11 @@ export function Footer() {
         </div>
         <div className="space-y-3">
           <p className="text-sm font-semibold text-white">{t("footer.contact")}</p>
-          {email && <a href={`mailto:${email}`} className="text-sm text-white/70 hover:text-white">{email}</a>}
+          {email && <a href={`mailto:${email}`} className="break-all text-sm text-white/70 hover:text-white">{email}</a>}
           {phone && <a href={bdPhoneHref(phone)} className="text-sm text-white/70 hover:text-white" dir="ltr">{formatBdPhone(phone)}</a>}
           {settingsQ.data?.contact?.whatsapp_enabled && phone && (
             <a href={`https://wa.me/${phone.replace(/\D/g, "").replace(/^0/, "880")}`} target="_blank" rel="noreferrer" className="text-sm text-white/70 hover:text-white">{t("contact.whatsapp")}</a>
           )}
-          <Link to="/admin" className="inline-block text-xs text-white/40 hover:text-white/70">
-            {t("nav.admin")}
-          </Link>
         </div>
       </Container>
       <div className="border-t border-white/10 py-5 text-center text-xs text-white/50">

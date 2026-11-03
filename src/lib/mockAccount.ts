@@ -18,6 +18,7 @@ export interface MockAccount {
   id: string;
   email: string;
   full_name: string;
+  phone?: string;
   salt: string;
   password_hash: string;
   addresses: MockAddress[];
@@ -41,7 +42,7 @@ async function hashPassword(password: string, salt: string) {
   return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
-export async function createMockAccount(email: string, fullName: string, password: string) {
+export async function createMockAccount(email: string, fullName: string, password: string, phone = "") {
   const normalizedEmail = email.trim().toLowerCase();
   const accounts = readAccounts();
   if (accounts.some((account) => account.email === normalizedEmail)) {
@@ -52,6 +53,7 @@ export async function createMockAccount(email: string, fullName: string, passwor
     id: genId(),
     email: normalizedEmail,
     full_name: fullName.trim(),
+    phone,
     salt,
     password_hash: await hashPassword(password, salt),
     addresses: [],

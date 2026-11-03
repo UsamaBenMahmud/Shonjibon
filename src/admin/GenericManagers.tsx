@@ -14,12 +14,14 @@ import type {
   ResearchItem,
   ShellPart,
   TeamMember,
+  SiteText,
   Testimonial,
   TestResult,
 } from "@/lib/types";
 import { ManagerPage, type Column, type FieldSpec } from "@/admin/shared";
 import { Button, SampleBadge } from "@/components/ui";
 import { useUIStore } from "@/store/ui";
+import { deleteSiteText, listSiteTexts, saveSiteText } from "@/lib/api";
 
 function useGenericManager<T extends { id: string; sort_order?: number }>(table: SimpleTable) {
   const qc = useQueryClient();
@@ -69,6 +71,54 @@ export function CategoriesManager() {
       onDelete={remove}
       onReorder={reorder}
       emptyItem={{ sort_order: items.length + 1 }}
+    />
+  );
+}
+
+type SiteTextRow = SiteText & { id: string };
+
+export function SiteTextManager() {
+  const qc = useQueryClient();
+  const query = useQuery({
+    queryKey: ["site_texts"],
+    queryFn: async () => (await listSiteTexts()).map((item) => ({ ...item, id: item.key })),
+  });
+  const fields: FieldSpec[] = [
+    { kind: "text", key: "key", label: "Text key", required: true },
+    { kind: "text", key: "group", label: "Group", required: true },
+    { kind: "textarea", key: "en", label: "English text", required: true },
+    { kind: "textarea", key: "bn", label: "Bangla text", required: true },
+  ];
+  const columns: Column<SiteTextRow>[] = [
+    { key: "key", label: "Key" },
+    { key: "group", label: "Group" },
+    { key: "en", label: "English" },
+    { key: "bn", label: "বাংলা" },
+  ];
+  return (
+    <ManagerPage
+      title="Site Text / সাইটের লেখা"
+      fields={fields}
+      columns={columns}
+      items={query.data ?? []}
+      isLoading={query.isLoading}
+      onSave={async (values) => {
+        const key = String(values.key ?? "").trim();
+        if (!key) throw new Error("Text key is required");
+        await saveSiteText({
+          key,
+          group: String(values.group ?? "").trim(),
+          en: String(values.en ?? ""),
+          bn: String(values.bn ?? ""),
+        });
+        await qc.invalidateQueries({ queryKey: ["site_texts"] });
+      }}
+      onDelete={async (item) => {
+        await deleteSiteText(item.key);
+        await qc.invalidateQueries({ queryKey: ["site_texts"] });
+      }}
+      emptyItem={{ key: "", group: "", en: "", bn: "" }}
+      showPublished={false}
     />
   );
 }
@@ -396,7 +446,12 @@ export function TeamManager() {
     { kind: "bilingual-text", key: "title", label: "Title / role" },
     { kind: "text", key: "department", label: "Department" },
     { kind: "bilingual-textarea", key: "bio", label: "Bio" },
-    { kind: "image", key: "photo_url", label: "Photo URL" },
+    { kind: "image", key: "photo_url", label: "Profile photo (upload or URL)" },
+    { kind: "text", key: "photo_alt_en", label: "Photo alt text (EN)" },
+    { kind: "text", key: "photo_alt_bn", label: "ছবির বিকল্প লেখা (বাং)" },
+    { kind: "text", key: "linkedin_url", label: "LinkedIn URL" },
+    { kind: "text", key: "public_email", label: "Public email (separate from login email)" },
+    { kind: "boolean", key: "show_public_email", label: "Show public email on the team page" },
     { kind: "number", key: "sort_order", label: "Sort order" },
   ];
   const columns: Column<TeamMember>[] = [

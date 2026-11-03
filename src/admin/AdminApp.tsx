@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import { ADMIN_LAST_ACTIVITY_KEY } from "@/lib/adminPath";
 import type { Session } from "@supabase/supabase-js";
 import { hasSupabase, supabase } from "@/lib/supabase";
 import Login from "@/admin/Login";
@@ -25,6 +27,7 @@ import {
   NavigationManager,
   ResearchManager,
   ShellPartsManager,
+  SiteTextManager,
   TeamManager,
   TestResultsManager,
   TestimonialsManager,
@@ -45,6 +48,14 @@ export default function AdminApp() {
           }
           return;
         }
+        const lastActivity = Number(sessionStorage.getItem(ADMIN_LAST_ACTIVITY_KEY));
+        if (!lastActivity || Date.now() - lastActivity >= 30 * 60 * 1000) {
+          if (active) {
+            setDenied(false);
+            setAuthed(false);
+          }
+          return;
+        }
         const { data, error } = await supabase!.from("profiles").select("role").eq("id", session.user.id).maybeSingle();
         if (error) {
           console.error("Could not verify admin role", error);
@@ -55,6 +66,24 @@ export default function AdminApp() {
           return;
         }
         const isAdmin = data?.role === "super_admin" || data?.role === "editor";
+        if (data?.role === "super_admin") {
+          const { data: assurance, error: assuranceError } = await supabase!.auth.mfa.getAuthenticatorAssuranceLevel();
+          if (assuranceError) {
+            console.error("Could not verify admin MFA assurance", assuranceError);
+            if (active) {
+              setDenied(false);
+              setAuthed(false);
+            }
+            return;
+          }
+          if (assurance.currentLevel !== "aal2") {
+            if (active) {
+              setDenied(false);
+              setAuthed(false);
+            }
+            return;
+          }
+        }
         if (active) {
           setDenied(!isAdmin);
           setAuthed(isAdmin);
@@ -80,10 +109,16 @@ export default function AdminApp() {
         sub.subscription.unsubscribe();
       };
     }
-    setAuthed(sessionStorage.getItem("shonjibon.admin.authed") === "1");
+    const lastActivity = Number(sessionStorage.getItem(ADMIN_LAST_ACTIVITY_KEY));
+    setAuthed(
+      sessionStorage.getItem("shonjibon.admin.authed") === "1" &&
+      !!lastActivity &&
+      Date.now() - lastActivity < 30 * 60 * 1000,
+    );
   }, []);
 
   async function handleLogout() {
+    sessionStorage.removeItem(ADMIN_LAST_ACTIVITY_KEY);
     if (hasSupabase && supabase) {
       await supabase.auth.signOut();
     } else {
@@ -93,31 +128,52 @@ export default function AdminApp() {
     setAuthed(false);
   }
 
+  useEffect(() => {
+    if (!authed) return;
+    let lastWrite = 0;
+    const expireIfIdle = () => {
+      const lastActivity = Number(sessionStorage.getItem(ADMIN_LAST_ACTIVITY_KEY));
+      if (!lastActivity || Date.now() - lastActivity >= 30 * 60 * 1000) {
+        void handleLogout();
+      }
+    };
+    const markActive = () => {
+      if (Date.now() - lastWrite < 10_000) return;
+      lastWrite = Date.now();
+      sessionStorage.setItem(ADMIN_LAST_ACTIVITY_KEY, String(lastWrite));
+    };
+    const activityEvents = ["pointerdown", "keydown", "touchstart"];
+    activityEvents.forEach((event) => window.addEventListener(event, markActive, { passive: true }));
+    const timer = window.setInterval(expireIfIdle, 15_000);
+    return () => {
+      activityEvents.forEach((event) => window.removeEventListener(event, markActive));
+      window.clearInterval(timer);
+    };
+  }, [authed]);
+
   if (authed === null) {
-    return <div className="flex min-h-screen items-center justify-center text-ink-muted">Loading...</div>;
+    return <><Helmet><meta name="robots" content="noindex,nofollow" /></Helmet><div className="flex min-h-screen items-center justify-center text-ink-muted">Loading...</div></>;
   }
 
   if (!authed) {
     if (denied) {
       return (
-        <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-bg-soft p-6 text-center">
-          <h1 className="font-display text-2xl font-semibold text-ink">অ্যাডমিন অনুমতি নেই / Admin access required</h1>
-          <p className="max-w-lg text-sm text-ink-muted">This account is not assigned an editor or super-admin role.</p>
-          <Link to="/account" className="text-teal-dark underline">Go to customer account</Link>
-          <button type="button" onClick={() => void handleLogout()} className="btn-secondary">Sign out</button>
-        </div>
+        <><Helmet><meta name="robots" content="noindex,nofollow" /></Helmet><main className="flex min-h-screen items-center justify-center bg-white p-6 text-center text-black"><h1>404 — Page not found</h1></main></>
       );
     }
-    return <Login onSuccess={() => { if (!hasSupabase) setAuthed(true); }} />;
+    return <><Helmet><meta name="robots" content="noindex,nofollow" /></Helmet><Login onSuccess={() => setAuthed(true)} /></>;
   }
 
   return (
+    <>
+    <Helmet><meta name="robots" content="noindex,nofollow" /></Helmet>
     <Routes>
       <Route element={<AdminLayout onLogout={handleLogout} />}>
         <Route index element={<Dashboard />} />
         <Route path="settings" element={<Settings />} />
         <Route path="health" element={<HealthCheck />} />
         <Route path="page-sections" element={<PageSectionsManager />} />
+        <Route path="site-text" element={<SiteTextManager />} />
         <Route path="navigation" element={<NavigationManager />} />
         <Route path="shell-story" element={<ShellPartsManager />} />
         <Route path="products" element={<ProductsManager />} />
@@ -142,5 +198,6 @@ export default function AdminApp() {
         <Route path="users" element={<UsersManager />} />
       </Route>
     </Routes>
+    </>
   );
 }

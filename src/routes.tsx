@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { Header, Footer } from "@/components/layout";
 import { Toaster } from "@/components/ui/Toast";
 import { Skeleton } from "@/components/ui";
+import { ADMIN_PATH } from "@/lib/adminPath";
 
 const Home = lazy(() => import("@/pages/Home"));
 const Products = lazy(() => import("@/pages/Products"));
@@ -63,7 +64,7 @@ export function AppRoutes() {
       <ScrollToTop />
       <Suspense fallback={<PageFallback />}>
         <Routes>
-          <Route path="/admin/*" element={<AdminApp />} />
+          <Route path={`${ADMIN_PATH}/*`} element={<AdminApp />} />
           <Route
             path="/*"
             element={

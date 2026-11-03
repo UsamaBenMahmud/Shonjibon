@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useCartStore } from "@/store/cart";
 import { formatCurrency } from "@/lib/utils";
-import { Section, SectionHeading, SEO } from "@/components/shared";
+import { Img, Section, SectionHeading, SEO } from "@/components/shared";
 import { Button, EmptyState } from "@/components/ui";
 
 export default function Cart() {
@@ -31,7 +31,7 @@ export default function Cart() {
             <div className="space-y-4 sm:col-span-2">
               {lines.map((line) => (
                 <div key={line.productId} className="card flex gap-4 p-4">
-                  <img src={line.image} alt="" className="h-20 w-20 rounded-xl object-cover" width={80} height={80} />
+                  <Img src={line.image} alt="" className="h-20 w-20 rounded-xl object-cover" width={80} height={80} />
                   <div className="flex-1 space-y-1">
                     <p className="font-medium text-ink">{lang === "bn" ? line.name_bn : line.name_en}</p>
                     <p className="text-sm text-teal-dark">{formatCurrency(line.price, line.currency, lang)}</p>

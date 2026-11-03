@@ -42,7 +42,7 @@ export default function Home() {
         title="সঞ্জীবন Shonjibon"
         description="Shrimp-shell waste to chitosan: a low-cost, electricity-free water filter helping reduce arsenic, heavy metals and turbidity for coastal Bangladesh."
       />
-      {sections?.hero && <Hero settings={settingsQ.data} />}
+      {sections?.hero && <Hero settings={settingsQ.data} product={productsQ.data?.find((product) => product.is_flagship) ?? productsQ.data?.[0]} />}
       {sections?.impact && <ImpactSection stats={impactQ.data ?? []} testResults={testResultsQ.data ?? []} />}
       {sections?.shellDiagram && <ShellDiagramSection products={productsQ.data ?? []} />}
       {sections?.products && <ProductsSection products={productsQ.data ?? []} />}
@@ -51,9 +51,9 @@ export default function Home() {
       {sections?.journey && <JourneyTimelineSection milestones={journeyQ.data ?? []} />}
       {sections?.community && <CommunityPreviewSection visits={communityQ.data ?? []} />}
       {sections?.articles && <ArticlesPreviewSection articles={articlesQ.data ?? []} />}
-      {sections?.team && <TeamPreviewSection members={teamQ.data ?? []} />}
       {sections?.testimonials && <TestimonialsSection items={testimonialsQ.data ?? []} />}
       {sections?.newsletter && <NewsletterSection />}
+      {sections?.team !== false && <TeamPreviewSection members={teamQ.data ?? []} />}
     </>
   );
 }

@@ -68,7 +68,7 @@ export function ProductGallery({ product }: { product: Product }) {
               onClick={() => setActive(idx)}
               className={`h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 transition ${idx === active ? "border-teal" : "border-transparent"}`}
             >
-              <img src={img.url} alt="" className="h-full w-full object-cover" width={64} height={64} />
+              <Img src={img.url} alt="" className="h-full w-full object-cover" width={64} height={64} />
             </button>
           ))}
         </div>

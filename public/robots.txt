@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /admin
+Disallow: /control-room
 
 Sitemap: https://shonjibon.example.com/sitemap.xml

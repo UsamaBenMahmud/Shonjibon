@@ -27,6 +27,13 @@ export interface SiteSettings {
   value: Record<string, unknown>;
 }
 
+export interface SiteText {
+  key: string;
+  en: string;
+  bn: string;
+  group: string;
+}
+
 export interface PageSection {
   id: string;
   page_key: "coastal" | "concerns" | "health" | "terms" | "privacy" | "refund" | "shipping";
@@ -294,7 +301,12 @@ export interface TeamMember {
   bio_en: string;
   bio_bn: string;
   photo_url: string;
+  photo_alt_en?: string;
+  photo_alt_bn?: string;
   links: Record<string, string>;
+  linkedin_url?: string;
+  public_email?: string;
+  show_public_email?: boolean;
   sort_order: number;
   is_published?: boolean;
 }
@@ -462,6 +474,12 @@ export interface Settings {
   hero_title_bn: string;
   hero_subtitle_en: string;
   hero_subtitle_bn: string;
+  team_title_en?: string;
+  team_title_bn?: string;
+  team_subtitle_en?: string;
+  team_subtitle_bn?: string;
+  team_description_en?: string;
+  team_description_bn?: string;
   contact_phone: string;
   contact_email: string;
   contact_address_en: string;

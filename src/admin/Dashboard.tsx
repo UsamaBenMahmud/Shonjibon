@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { adminHref } from "@/lib/adminPath";
 import { listArticlesAdmin, listAuditLog, listMessagesAdmin, listOrdersAdmin } from "@/lib/api";
 import { formatDate } from "@/lib/utils";
 import { EmptyState } from "@/components/ui";
@@ -15,16 +16,16 @@ export default function Dashboard() {
   const drafts = (articlesQ.data ?? []).filter((a) => a.status === "draft").length;
 
   const cards = [
-    { label: "নতুন অর্ডার / New orders", value: newOrders, to: "/admin/orders" },
-    { label: "অপঠিত বার্তা / Unread messages", value: unread, to: "/admin/messages" },
-    { label: "ড্রাফট নিবন্ধ / Draft articles", value: drafts, to: "/admin/articles" },
+    { label: "নতুন অর্ডার / New orders", value: newOrders, to: adminHref("orders") },
+    { label: "অপঠিত বার্তা / Unread messages", value: unread, to: adminHref("messages") },
+    { label: "ড্রাফট নিবন্ধ / Draft articles", value: drafts, to: adminHref("articles") },
   ];
 
   const quickAdd = [
-    { label: "+ পণ্য / Product", to: "/admin/products" },
-    { label: "+ নিবন্ধ / Article", to: "/admin/articles" },
-    { label: "+ টিম সদস্য / Team member", to: "/admin/team" },
-    { label: "+ পরীক্ষা ফলাফল / Test result", to: "/admin/testing" },
+    { label: "+ পণ্য / Product", to: adminHref("products") },
+    { label: "+ নিবন্ধ / Article", to: adminHref("articles") },
+    { label: "+ টিম সদস্য / Team member", to: adminHref("team") },
+    { label: "+ পরীক্ষা ফলাফল / Test result", to: adminHref("testing") },
   ];
 
   return (
