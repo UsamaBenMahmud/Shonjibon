@@ -43,26 +43,6 @@
   --theme-color: #04141a;
 }
 
-.team-social-actions {
-  opacity: 0;
-  transition: opacity 180ms ease;
-}
-.team-photo-card:hover .team-social-actions,
-.team-photo-card:focus-within .team-social-actions {
-  opacity: 1;
-}
-@media (hover: none) {
-  .team-social-actions,
-  .team-photo-overlay { opacity: 1; }
-}
-.team-carousel-track { scrollbar-width: none; }
-.team-carousel-track::-webkit-scrollbar { display: none; }
-@media (prefers-reduced-motion: reduce) {
-  .team-social-actions,
-  .team-photo-overlay { transition: none; }
-  .team-carousel-track { scroll-behavior: auto; }
-}
-
 @theme {
   --color-bg: rgb(var(--bg));
   --color-bg-soft: rgb(var(--bg-soft));

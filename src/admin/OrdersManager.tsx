@@ -5,7 +5,6 @@ import type { Order, OrderStatus } from "@/lib/types";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { Badge, Button, EmptyState, Modal, Select } from "@/components/ui";
 import { useUIStore } from "@/store/ui";
-import { getSettings } from "@/lib/api";
 
 const statusTone: Record<OrderStatus, "neutral" | "teal" | "coral" | "sand"> = {
   new: "coral",
@@ -18,7 +17,6 @@ const statusTone: Record<OrderStatus, "neutral" | "teal" | "coral" | "sand"> = {
 export default function OrdersManager() {
   const qc = useQueryClient();
   const ordersQ = useQuery({ queryKey: ["orders-admin"], queryFn: listOrdersAdmin });
-  const settingsQ = useQuery({ queryKey: ["settings"], queryFn: getSettings });
   const pushToast = useUIStore((s) => s.pushToast);
   const [filter, setFilter] = useState<OrderStatus | "all">("all");
   const [viewing, setViewing] = useState<Order | null>(null);
@@ -153,7 +151,7 @@ export default function OrdersManager() {
         {viewing && (
           <div className="space-y-4 print:text-black" id="invoice">
             <img
-              src={settingsQ.data?.branding?.logo_full_url || "/brand/logo-full.png"}
+              src="/brand-logo-original.png"
               alt="Shonjibon"
               width={240}
               height={110}

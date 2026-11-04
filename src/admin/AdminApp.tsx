@@ -109,20 +109,15 @@ export default function AdminApp() {
         sub.subscription.unsubscribe();
       };
     }
-    const lastActivity = Number(sessionStorage.getItem(ADMIN_LAST_ACTIVITY_KEY));
-    setAuthed(
-      sessionStorage.getItem("shonjibon.admin.authed") === "1" &&
-      !!lastActivity &&
-      Date.now() - lastActivity < 30 * 60 * 1000,
-    );
+    sessionStorage.removeItem(ADMIN_LAST_ACTIVITY_KEY);
+    sessionStorage.removeItem("shonjibon.admin.authed");
+    setAuthed(false);
   }, []);
 
   async function handleLogout() {
     sessionStorage.removeItem(ADMIN_LAST_ACTIVITY_KEY);
     if (hasSupabase && supabase) {
       await supabase.auth.signOut();
-    } else {
-      sessionStorage.removeItem("shonjibon.admin.authed");
     }
     setDenied(false);
     setAuthed(false);
@@ -158,7 +153,26 @@ export default function AdminApp() {
   if (!authed) {
     if (denied) {
       return (
-        <><Helmet><meta name="robots" content="noindex,nofollow" /></Helmet><main className="flex min-h-screen items-center justify-center bg-white p-6 text-center text-black"><h1>404 — Page not found</h1></main></>
+        <>
+          <Helmet><meta name="robots" content="noindex,nofollow" /></Helmet>
+          <main className="flex min-h-screen items-center justify-center bg-bg-soft p-6">
+            <section className="w-full max-w-xl space-y-4 rounded-2xl border border-border bg-surface p-8 text-ink shadow-sm">
+              <h1 className="font-display text-2xl font-semibold">Admin access is not enabled for this account</h1>
+              <p className="text-sm leading-relaxed text-ink-muted">
+                In your Supabase Dashboard, open SQL Editor and run this query with the same email you used to create your account:
+              </p>
+              <pre className="overflow-x-auto rounded-xl bg-bg-soft p-4 text-xs leading-relaxed text-ink">
+                {"insert into public.profiles (id, full_name, email, role)\nselect id, coalesce(raw_user_meta_data->>'full_name', 'Admin'), email, 'super_admin'\nfrom auth.users\nwhere lower(email) = lower('your-signup-email@example.com')\non conflict (id) do update\nset role = excluded.role, email = excluded.email;"}
+              </pre>
+              <p className="text-sm leading-relaxed text-ink-muted">
+                After the query succeeds, sign out here and sign in again. If it updates no rows, check that the email matches a user under Supabase Authentication → Users.
+              </p>
+              <button type="button" onClick={() => void handleLogout()} className="btn-primary">
+                Sign out
+              </button>
+            </section>
+          </main>
+        </>
       );
     }
     return <><Helmet><meta name="robots" content="noindex,nofollow" /></Helmet><Login onSuccess={() => setAuthed(true)} /></>;

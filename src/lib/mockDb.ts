@@ -562,10 +562,10 @@ function buildSeed(): DB {
     team_description_en: "A small team on a big mission: turning waste into clean water with science, design, and care.",
     team_description_bn: "ছোট একটি দল, বড় একটি লক্ষ্য: বিজ্ঞান, নকশা ও যত্ন দিয়ে বর্জ্যকে বিশুদ্ধ পানিতে রূপ দেওয়া।",
     contact_phone: "01620485218",
-    contact_email: "usamabenmahmud@gmail.com",
+    contact_email: "",
     contact: {
       phone: "01620485218",
-      email: "usamabenmahmud@gmail.com",
+      email: "",
       address: "Khulna, Bangladesh",
       hours: "",
       map_link: "",
@@ -587,7 +587,6 @@ function buildSeed(): DB {
     social_facebook: "https://facebook.com",
     social_youtube: "https://youtube.com",
     social_linkedin: "https://linkedin.com",
-    admin_password: "shonjibon2026",
     sections: {
       hero: true,
       impact: true,
@@ -669,6 +668,20 @@ export function getDb(): DB {
     db = buildSeed();
     saveRaw(db);
   }
+  let removedLegacyCredentials = false;
+  if (Object.prototype.hasOwnProperty.call(db.settings, "admin_password")) {
+    Reflect.deleteProperty(db.settings, "admin_password");
+    removedLegacyCredentials = true;
+  }
+  if (db.settings.contact_email === "usamabenmahmud@gmail.com") {
+    db.settings.contact_email = "";
+    removedLegacyCredentials = true;
+  }
+  if (db.settings.contact?.email === "usamabenmahmud@gmail.com") {
+    db.settings.contact.email = "";
+    removedLegacyCredentials = true;
+  }
+  if (removedLegacyCredentials) saveRaw(db);
   db.site_texts ??= [];
   for (const result of db.test_results) {
     if (result.status === "sample") result.is_sample = true;
@@ -688,7 +701,7 @@ export function getDb(): DB {
     logo_height: 40,
     use_mark_only: false,
   };
-  db.settings.contact_email ||= "usamabenmahmud@gmail.com";
+  db.settings.contact_email ??= "";
   db.settings.contact ??= {
     phone: db.settings.contact_phone,
     email: db.settings.contact_email,

@@ -8,59 +8,57 @@ export function TeamMemberCard({ member, lang }: { member: TeamMember; lang: Lan
   const email = member.show_public_email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(candidateEmail)
     ? candidateEmail
     : "";
-  const altText = lang === "bn" ? member.photo_alt_bn : member.photo_alt_en;
+  const photoAlt = lang === "bn" ? member.photo_alt_bn : member.photo_alt_en;
 
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface text-center">
-      <div className="team-photo-card group relative aspect-[4/3] overflow-hidden bg-bg-soft">
-        {member.photo_url ? (
-          <img
-            src={member.photo_url}
-            alt={altText || member.name}
-            className="h-full w-full object-cover"
-            width={480}
-            height={360}
-            loading="lazy"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center font-display text-4xl font-semibold text-teal-dark" aria-hidden="true">
-            {member.name.split(" ").map((word) => word[0]).slice(0, 2).join("")}
-          </div>
-        )}
-        <div className="team-photo-overlay pointer-events-none absolute inset-0 bg-ink/40 opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100" />
-        {(linkedin || email) && (
-          <div className="team-social-actions absolute inset-0 flex items-center justify-center gap-3">
-            {linkedin && (
-              <a
-                href={linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${member.name} on LinkedIn`}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-surface text-ink shadow-md transition hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-              >
-                <LinkedInIcon />
-              </a>
-            )}
-            {email && (
-              <a
-                href={`mailto:${email}`}
-                aria-label={`Email ${member.name}`}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-surface text-ink shadow-md transition hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-              >
-                <EmailIcon />
-              </a>
-            )}
-          </div>
-        )}
-      </div>
-      <div className="flex-1 space-y-1 p-4">
-        <h3 className="font-semibold text-ink">{member.name}</h3>
-        <p className="text-sm text-ink-muted">{t2(member, "title", lang)}</p>
-        {member.department && <p className="text-xs text-ink-muted/80">{member.department}</p>}
-        {(member.bio_en || member.bio_bn) && (
-          <p className="pt-2 text-sm leading-relaxed text-ink-muted">{t2(member, "bio", lang)}</p>
-        )}
-      </div>
+    <article className="flex h-full flex-col items-center rounded-2xl border border-border bg-surface p-6 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-md">
+      {member.photo_url ? (
+        <img
+          src={member.photo_url}
+          alt={photoAlt || member.name}
+          width={96}
+          height={96}
+          loading="lazy"
+          className="h-24 w-24 rounded-full object-cover ring-4 ring-teal/10"
+        />
+      ) : (
+        <div
+          className="flex h-24 w-24 items-center justify-center rounded-full bg-teal/10 font-display text-2xl font-semibold text-teal-dark ring-4 ring-teal/5"
+          aria-hidden="true"
+        >
+          {member.name.split(" ").map((word) => word[0]).slice(0, 2).join("")}
+        </div>
+      )}
+      <h3 className="mt-4 font-semibold leading-snug text-ink">{member.name}</h3>
+      <p className="mt-1 text-sm font-medium leading-snug text-teal-dark">{t2(member, "title", lang)}</p>
+      {member.department && <p className="mt-1 text-xs text-ink-muted">{member.department}</p>}
+      {(member.bio_en || member.bio_bn) && (
+        <p className="mt-3 flex-1 text-sm leading-relaxed text-ink-muted">{t2(member, "bio", lang)}</p>
+      )}
+      {(linkedin || email) && (
+        <div className="mt-4 flex justify-center gap-3 border-t border-border pt-4">
+          {linkedin && (
+            <a
+              href={linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${member.name} on LinkedIn`}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border text-ink transition hover:bg-bg-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal"
+            >
+              <LinkedInIcon />
+            </a>
+          )}
+          {email && (
+            <a
+              href={`mailto:${email}`}
+              aria-label={`Email ${member.name}`}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border text-ink transition hover:bg-bg-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal"
+            >
+              <EmailIcon />
+            </a>
+          )}
+        </div>
+      )}
     </article>
   );
 }

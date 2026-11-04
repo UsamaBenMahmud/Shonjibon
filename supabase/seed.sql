@@ -27,8 +27,8 @@ insert into site_settings (key, value) values
   ('team_description_en', '"A small team on a big mission: turning waste into clean water with science, design, and care."'),
   ('team_description_bn', '"ছোট একটি দল, বড় একটি লক্ষ্য: বিজ্ঞান, নকশা ও যত্ন দিয়ে বর্জ্যকে বিশুদ্ধ পানিতে রূপ দেওয়া।"'),
   ('contact_phone', '"01620485218"'),
-  ('contact_email', '"usamabenmahmud@gmail.com"'),
-  ('contact', '{"phone":"01620485218","email":"usamabenmahmud@gmail.com","address":"Khulna, Bangladesh","hours":"","map_link":"","whatsapp_enabled":false}'),
+  ('contact_email', '""'),
+  ('contact', '{"phone":"01620485218","email":"","address":"Khulna, Bangladesh","hours":"","map_link":"","whatsapp_enabled":false}'),
   ('branding', '{"name_bn":"সঞ্জীবন","name_en":"Shonjibon","show_bangla_name":true,"logo_mark_url":"","logo_full_url":"","logo_dark_url":"","logo_height":40,"use_mark_only":false}'),
   ('sections', '{"hero":true,"impact":true,"shellDiagram":true,"products":true,"circularEconomy":true,"wasteRing":true,"journey":true,"community":true,"articles":true,"team":true,"testimonials":true,"newsletter":true}')
 on conflict (key) do update set value = excluded.value;

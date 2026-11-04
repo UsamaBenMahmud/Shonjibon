@@ -22,68 +22,59 @@ export default function Login({ onSuccess }: { onSuccess: () => void }) {
 
   async function onSubmit(values: LoginInput) {
     setError("");
-    if (hasSupabase && supabase) {
-      if (phase !== "password") {
-        await verifyTotp();
-        return;
-      }
-      const parsed = emailLoginSchema.safeParse({ email, password: values.password });
-      if (!parsed.success) {
-        setError("Sign in failed. Check your credentials and try again.");
-        return;
-      }
-      try {
-        const { data: signedIn, error: authError } = await supabase.auth.signInWithPassword(parsed.data);
-        if (authError || !signedIn.user) throw authError ?? new Error("Authentication failed");
-        const { data: profile, error: profileError } = await supabase
-          .from("profiles")
-          .select("role")
-          .eq("id", signedIn.user.id)
-          .maybeSingle();
-        if (profileError) throw profileError;
-        if (profile?.role !== "super_admin" && profile?.role !== "editor") {
-          await supabase.auth.signOut();
-          throw new Error("Authentication failed");
-        }
-        if (profile.role === "super_admin") {
-          const { data: assurance, error: assuranceError } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-          if (assuranceError) throw assuranceError;
-          if (assurance.currentLevel !== "aal2") {
-            const { data: factors, error: factorsError } = await supabase.auth.mfa.listFactors();
-            if (factorsError) throw factorsError;
-            const verifiedFactor = factors.totp.find((factor) => factor.status === "verified");
-            if (verifiedFactor) {
-              setFactorId(verifiedFactor.id);
-              setPhase("totp");
-            } else {
-              const { data: enrollment, error: enrollmentError } = await supabase.auth.mfa.enroll({
-                factorType: "totp",
-                friendlyName: "Shonjibon administrator",
-              });
-              if (enrollmentError) throw enrollmentError;
-              setFactorId(enrollment.id);
-              setQrCode(enrollment.totp.qr_code);
-              setPhase("enroll");
-            }
-            return;
-          }
-        }
-        markAuthenticated();
-      } catch (authFailure) {
-        if (import.meta.env.DEV) console.error("Admin sign-in failed", authFailure);
-        sessionStorage.removeItem(ADMIN_LAST_ACTIVITY_KEY);
-        setError("Sign in failed. Check your credentials and try again.");
-      }
+    if (!hasSupabase || !supabase) return;
+    if (phase !== "password") {
+      await verifyTotp();
       return;
     }
-    const { getSettings } = await import("@/lib/api");
-    const settings = await getSettings();
-    if (values.password === settings.admin_password) {
-      sessionStorage.setItem("shonjibon.admin.authed", "1");
-      sessionStorage.setItem(ADMIN_LAST_ACTIVITY_KEY, String(Date.now()));
-      onSuccess();
-    } else {
-      setError("ভুল পাসওয়ার্ড / Incorrect password");
+    const parsed = emailLoginSchema.safeParse({ email, password: values.password });
+    if (!parsed.success) {
+      setError("Sign in failed. Check your credentials and try again.");
+      return;
+    }
+    try {
+      const { data: signedIn, error: authError } = await supabase.auth.signInWithPassword(parsed.data);
+      if (authError || !signedIn.user) throw authError ?? new Error("Authentication failed");
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", signedIn.user.id)
+        .maybeSingle();
+      if (profileError) throw profileError;
+      const role = profile?.role;
+      if (role !== "super_admin" && role !== "editor") {
+        await supabase.auth.signOut();
+        setError("Your account is registered, but it does not have admin access yet. Promote it to super_admin in the Supabase SQL Editor, then sign in again.");
+        return;
+      }
+      if (role === "super_admin") {
+        const { data: assurance, error: assuranceError } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+        if (assuranceError) throw assuranceError;
+        if (assurance.currentLevel !== "aal2") {
+          const { data: factors, error: factorsError } = await supabase.auth.mfa.listFactors();
+          if (factorsError) throw factorsError;
+          const verifiedFactor = factors.totp.find((factor) => factor.status === "verified");
+          if (verifiedFactor) {
+            setFactorId(verifiedFactor.id);
+            setPhase("totp");
+          } else {
+            const { data: enrollment, error: enrollmentError } = await supabase.auth.mfa.enroll({
+              factorType: "totp",
+              friendlyName: "Shonjibon administrator",
+            });
+            if (enrollmentError) throw enrollmentError;
+            setFactorId(enrollment.id);
+            setQrCode(enrollment.totp.qr_code);
+            setPhase("enroll");
+          }
+          return;
+        }
+      }
+      markAuthenticated();
+    } catch (authFailure) {
+      if (import.meta.env.DEV) console.error("Admin sign-in failed", authFailure);
+      sessionStorage.removeItem(ADMIN_LAST_ACTIVITY_KEY);
+      setError("Sign in failed. Check your credentials and try again.");
     }
   }
 
@@ -118,45 +109,58 @@ export default function Login({ onSuccess }: { onSuccess: () => void }) {
           <Logo />
         </div>
         <h1 className="mb-1 text-center font-display text-xl font-semibold text-ink">অ্যাডমিন লগইন / Admin login</h1>
-        <p className="mb-6 text-center text-sm text-ink-muted">
-          {phase === "password"
-            ? hasSupabase ? "Sign in with your admin account." : "Demo password: shonjibon2026 (changeable in Settings)."
-            : phase === "enroll"
-              ? "Set up an authenticator app to continue. Scan the code, then enter its current code."
-              : "Enter the current code from your authenticator app."}
-        </p>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-          {hasSupabase && phase === "password" && (
-            <FieldWrap label="Email">
-              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" required />
-            </FieldWrap>
-          )}
-          {phase === "password" ? (
-            <FieldWrap label="পাসওয়ার্ড / Password" error={errors.password?.message}>
-              <Input type="password" {...register("password")} error={!!errors.password} />
-            </FieldWrap>
-          ) : (
-            <>
-              {phase === "enroll" && qrCode && (
-                <img src={qrCode} alt="Authenticator enrollment QR code" className="mx-auto max-w-48 rounded-lg border border-border bg-white p-2" />
+        {!hasSupabase || !supabase ? (
+          <div className="space-y-4 text-center">
+            <p className="text-sm leading-relaxed text-ink-muted">
+              Admin login is disabled until Supabase is configured. Set up Supabase Auth and create your admin account; the site no longer has a shared demo password.
+            </p>
+            <Button type="button" variant="secondary" onClick={() => window.location.assign("/")}>
+              Back to site
+            </Button>
+          </div>
+        ) : (
+          <>
+            <p className="mb-6 text-center text-sm text-ink-muted">
+              {phase === "password"
+                ? "Sign in with your admin account."
+                : phase === "enroll"
+                  ? "Set up an authenticator app to continue. Scan the code, then enter its current code."
+                  : "Enter the current code from your authenticator app."}
+            </p>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+              {phase === "password" && (
+                <FieldWrap label="Email">
+                  <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" required />
+                </FieldWrap>
               )}
-              <FieldWrap label="Authentication code">
-                <Input
-                  type="text"
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  value={totpCode}
-                  onChange={(event) => setTotpCode(event.target.value)}
-                  required
-                />
-              </FieldWrap>
-            </>
-          )}
-          {error && <p className="text-sm font-medium text-coral-text">{error}</p>}
-          <Button type="submit" disabled={isSubmitting} className="w-full">
-            {phase === "password" ? "লগইন / Log in" : "Verify code"}
-          </Button>
-        </form>
+              {phase === "password" ? (
+                <FieldWrap label="পাসওয়ার্ড / Password" error={errors.password?.message}>
+                  <Input type="password" {...register("password")} error={!!errors.password} />
+                </FieldWrap>
+              ) : (
+                <>
+                  {phase === "enroll" && qrCode && (
+                    <img src={qrCode} alt="Authenticator enrollment QR code" className="mx-auto max-w-48 rounded-lg border border-border bg-white p-2" />
+                  )}
+                  <FieldWrap label="Authentication code">
+                    <Input
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="one-time-code"
+                      value={totpCode}
+                      onChange={(event) => setTotpCode(event.target.value)}
+                      required
+                    />
+                  </FieldWrap>
+                </>
+              )}
+              {error && <p className="text-sm font-medium text-coral-text">{error}</p>}
+              <Button type="submit" disabled={isSubmitting} className="w-full">
+                {phase === "password" ? "লগইন / Log in" : "Verify code"}
+              </Button>
+            </form>
+          </>
+        )}
       </div>
     </div>
   );

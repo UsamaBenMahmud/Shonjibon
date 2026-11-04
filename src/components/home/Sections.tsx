@@ -46,7 +46,7 @@ function useCountUp(target: number, active: boolean) {
   return value;
 }
 
-function StatCounter({ stat }: { stat: ImpactStat }) {
+function StatCounter({ stat, featured = false }: { stat: ImpactStat; featured?: boolean }) {
   const { i18n, t } = useTranslation();
   const lang = i18n.resolvedLanguage === "en" ? "en" : "bn";
   const ref = useRef<HTMLDivElement>(null);
@@ -67,27 +67,33 @@ function StatCounter({ stat }: { stat: ImpactStat }) {
   const status = stat.is_sample ? "sample" : stat.status ?? (stat.source_name && stat.source_url ? "verified" : "target");
   const statusLabel = status === "sample" ? "Sample" : status === "target" ? "Target" : "Verified";
   const content = (
-    <div ref={ref} className="card relative flex h-full min-h-40 flex-col gap-3 overflow-hidden p-5">
+    <div
+      ref={ref}
+      className={featured
+        ? "relative z-10 flex h-full min-h-64 flex-col gap-4 rounded-2xl border border-white/15 bg-white/10 p-6 text-white sm:min-h-full"
+        : "card relative flex h-full min-h-40 flex-col gap-3 overflow-hidden p-5"}
+    >
       <div className="flex items-center justify-between gap-2">
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal/10 text-xl text-teal-dark" aria-hidden="true">{stat.icon || "✳"}</span>
+        <span className={`flex h-9 w-9 items-center justify-center rounded-xl text-xl ${featured ? "bg-white/10 text-white" : "bg-teal/10 text-teal-dark"}`} aria-hidden="true">{stat.icon || "✳"}</span>
         {status === "sample" ? <SampleBadge label={statusLabel} /> : <Badge tone={status === "target" ? "sand" : "teal"}>{statusLabel}</Badge>}
       </div>
       <div>
-        <p className="font-display text-3xl font-semibold tabular-nums text-teal-dark">
+        <p className={`font-display text-3xl font-semibold tabular-nums ${featured ? "text-white sm:text-5xl" : "text-teal-dark"}`}>
           {stat.prefix}{formatNumber(value, lang)}{stat.suffix}
         </p>
-        <p className="mt-1 font-semibold text-ink">{t2(stat, "label", lang)}</p>
-        {(stat.description_en || stat.description_bn) && <p className="mt-1 text-sm leading-relaxed text-ink-muted">{t2(stat, "description", lang)}</p>}
+        <p className={`mt-1 font-semibold ${featured ? "text-white" : "text-ink"}`}>{t2(stat, "label", lang)}</p>
+        {(stat.description_en || stat.description_bn) && <p className={`mt-1 text-sm leading-relaxed ${featured ? "text-white/75" : "text-ink-muted"}`}>{t2(stat, "description", lang)}</p>}
       </div>
-      {stat.link && <span className="mt-auto text-xs font-semibold text-teal-dark">{t("actions.learnMore")} →</span>}
+      {stat.link && <span className={`mt-auto text-xs font-semibold ${featured ? "text-white" : "text-teal-dark"}`}>{t("actions.learnMore")} →</span>}
     </div>
   );
   return stat.link ? <Link to={stat.link} className="block h-full rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-teal">{content}</Link> : content;
 }
 
 export function ImpactSection({ stats, testResults = [] }: { stats: ImpactStat[]; testResults?: TestResult[] }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   if (!stats.length) return null;
+  const lang = i18n.resolvedLanguage === "en" ? "en" : "bn";
   const verifiedTests = testResults.filter((result) => result.status === "verified" && !result.is_sample).length;
   const ordered = stats.map((stat) => stat.label_en === "Lab tests completed"
     ? { ...stat, value: verifiedTests, status: "target" as const, is_sample: false }
@@ -96,15 +102,21 @@ export function ImpactSection({ stats, testResults = [] }: { stats: ImpactStat[]
   const rest = ordered.filter((stat) => stat.id !== featured.id);
   return (
     <Section className="bg-ocean-deep">
-      <SectionHeading title={<span className="text-white">{t("home.impactTitle")}</span>} align="center" />
+      <SectionHeading
+        title={<span className="text-white">{t("home.impactTitle")}</span>}
+        body={lang === "en"
+          ? "We turn shrimp-shell waste into practical solutions and track our progress through transparent milestones, verified tests, and future targets."
+          : "চিংড়ির খোলসের বর্জ্যকে ব্যবহারিক সমাধানে রূপ দিই—স্বচ্ছ অগ্রগতি, যাচাইকৃত পরীক্ষা ও ভবিষ্যৎ লক্ষ্যের মাধ্যমে আমাদের প্রভাব তুলে ধরি।"}
+        align="center"
+      />
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="relative overflow-hidden rounded-2xl border border-white/15 bg-white/10 p-6 text-white sm:row-span-2 lg:col-span-2">
-          {featured && <StatCounter stat={featured} />}
+        <div className="relative overflow-hidden rounded-2xl sm:row-span-2 lg:col-span-2">
+          {featured && <StatCounter stat={featured} featured />}
           <div className="pointer-events-none absolute bottom-6 right-6 opacity-80" aria-hidden="true">
             <svg viewBox="0 0 120 120" className="h-28 w-28" fill="none">
-              <circle cx="60" cy="60" r="44" stroke="currentColor" strokeWidth="9" opacity=".2" />
-              <circle cx="60" cy="60" r="44" stroke="currentColor" strokeWidth="9" strokeDasharray="205 276" strokeLinecap="round" transform="rotate(-90 60 60)" />
-              <path d="M42 37c19-12 42-3 45 12m0 0-9-6m9 6 1-11M77 83c-19 12-42 3-45-12m0 0 9 6m-9-6-1 11" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+              <circle cx="60" cy="60" r="44" stroke="white" strokeWidth="9" opacity=".2" />
+              <circle cx="60" cy="60" r="44" stroke="white" strokeWidth="9" strokeDasharray="205 276" strokeLinecap="round" transform="rotate(-90 60 60)" />
+              <path d="M42 37c19-12 42-3 45 12m0 0-9-6m9 6 1-11M77 83c-19 12-42 3-45-12m0 0 9 6m-9-6-1 11" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
         </div>
@@ -323,9 +335,14 @@ export function TeamPreviewSection({ members }: { members: TeamMember[] }) {
           title={title || t("home.teamTitle")}
           body={subtitle || (lang === "en" ? "The Minds Behind Shonjibon" : "সঞ্জীবনের পেছনের মানুষেরা")}
         />
-        <Link to="/team" className="text-sm font-medium text-teal-dark hover:underline">
-          {t("actions.seeAll")}
-        </Link>
+        <div className="flex items-center gap-4">
+          <span className="rounded-full bg-teal/10 px-3 py-1.5 text-xs font-semibold text-teal-dark">
+            {lang === "en" ? `${core.length} team members` : `দলের সদস্য ${formatNumber(core.length, lang)} জন`}
+          </span>
+          <Link to="/team" className="text-sm font-medium text-teal-dark hover:underline">
+            {t("actions.seeAll")}
+          </Link>
+        </div>
       </div>
       {description && <p className="mt-4 max-w-3xl text-sm leading-relaxed text-ink-muted">{description}</p>}
       <TeamCarousel members={core} lang={lang} />

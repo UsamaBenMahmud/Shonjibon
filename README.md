@@ -54,9 +54,9 @@ of 12 near-identical files.
 - Otherwise falls back to **`mockDb.ts`**, a fully-seeded localStorage database (with an in-memory
   fallback if localStorage is unavailable) — no backend required to demo the whole site.
 
-Admin auth mirrors this: Supabase Auth (email/password) in mode (a), or a simple password gate
-(default `shonjibon2026`, changeable under **Admin → Settings**) in mode (b). No service-role key is
-ever used in the client.
+Admin access requires Supabase Auth (email/password). The local demo database does not provide an
+admin login, and no shared password or admin email is stored in the application. No service-role key
+is ever used in the client.
 
 ---
 
@@ -67,9 +67,10 @@ npm install
 npm run dev        # http://localhost:5173
 ```
 
-The site works immediately with **no environment variables** — it runs fully on the seeded mock
-database in your browser's localStorage. Visit `/control-room` and log in with `shonjibon2026`.
-For isolated UI checks when `.env.local` contains Supabase credentials, set `VITE_USE_MOCK_DB=true`.
+The site works immediately with **no environment variables** — it runs on the seeded mock database
+in your browser's localStorage. To use the admin panel, configure Supabase and create an admin
+account as described below. For isolated UI checks when `.env.local` contains Supabase credentials,
+set `VITE_USE_MOCK_DB=true`.
 
 ---
 
@@ -84,6 +85,7 @@ For isolated UI checks when `.env.local` contains Supabase credentials, set `VIT
    `supabase/009_team_public_contacts.sql`,
    `supabase/010_customer_signup_phone.sql`,
    `supabase/011_site_texts.sql`,
+   `supabase/012_remove_demo_admin_credentials.sql`,
    then `supabase/seed.sql`.
 3. Copy `.env.example` to `.env` and fill in your project's values:
 
@@ -128,17 +130,25 @@ psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/008_customer_accoun
 
 ### Create the first admin user
 
-Supabase Auth manages login, but every authenticated user also needs a row in `profiles` with a
-`role` to pass Row Level Security checks:
+Create your account at `/account` on the deployed site (choose **Create account**) and confirm the
+email if Supabase requests it. Make sure the site is connected to this Supabase project first. New
+signups receive the `customer` role and cannot grant themselves admin access. In the Supabase
+Dashboard's SQL Editor, promote only your own account by running the following after replacing the
+email address:
 
 ```sql
--- 1. Create a user from the Supabase Dashboard → Authentication → Users → Add user
--- 2. Then link their profile (replace the uuid with the new user's id):
-insert into profiles (id, full_name, email, role)
-values ('00000000-0000-0000-0000-000000000000', 'Admin', 'admin@example.com', 'super_admin');
+insert into public.profiles (id, full_name, email, role)
+select id, coalesce(raw_user_meta_data->>'full_name', 'Admin'), email, 'super_admin'
+from auth.users
+where lower(email) = lower('you@example.com')
+on conflict (id) do update
+set role = excluded.role, email = excluded.email;
 ```
 
-Log in at the configured admin URL (default `/control-room`) with that user's email/password.
+If the query affects no rows, confirm the account exists under **Authentication → Users** and that
+the email matches. Then log in at the configured admin URL (default `/control-room`) with that
+account's email/password. A super admin will be prompted to enroll in or enter an authenticator app
+code.
 Set `VITE_ADMIN_PATH` before building to change the route; it is deliberately not linked from public
 navigation and the route sets `noindex,nofollow`.
 
@@ -251,7 +261,6 @@ chunks so admin, Tiptap, Recharts, and drag-and-drop code do not need to be in t
 ## 10. Admin quick reference
 
 - URL: `VITE_ADMIN_PATH` (default `/control-room`; fully lazy-loaded).
-- Mock mode password: `shonjibon2026` (change under **Settings**).
 - **Settings** also has **Export/Import JSON backup** and **Reset to demo data** (mock mode only).
 - `Ctrl/Cmd + S` inside a content form is a best-effort shortcut users will expect — submit buttons
   are always visible as the reliable path.

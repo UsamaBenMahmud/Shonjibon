@@ -66,7 +66,7 @@ export async function sendResendEmail(
 function brandedEmailHtml(text: string): string {
   const siteUrl = Deno.env.get("SITE_URL")?.replace(/\/+$/, "");
   const logo = siteUrl
-    ? `<img src="${siteUrl}/brand/logo-full.png" width="220" alt="Shonjibon" style="display:block;height:auto;max-width:100%;margin-bottom:20px">`
+    ? `<img src="${siteUrl}/brand-logo-original.png" width="220" alt="Shonjibon" style="display:block;height:auto;max-width:100%;margin-bottom:20px">`
     : "";
   const entities: Record<string, string> = {
     "&": "&amp;",

@@ -74,7 +74,7 @@ export function Header() {
       <header className="sticky top-0 z-50 border-b border-border/70 bg-bg/95 backdrop-blur">
         <Container className="flex h-16 items-center justify-between gap-4">
           <Link to="/" aria-label="Shonjibon home" className="shrink-0">
-            <Logo branding={settingsQuery.data?.branding} />
+            <Logo />
           </Link>
           <div className="flex items-center gap-2">
             <LanguageToggle className="hidden sm:flex" />

@@ -203,7 +203,7 @@ export const backupSchema = z.custom<DB>((value): value is DB => {
   const requiredSettings = [
     "motto_en", "motto_bn", "hero_title_en", "hero_title_bn", "hero_subtitle_en", "hero_subtitle_bn",
     "contact_phone", "contact_email", "contact_address_en", "contact_address_bn", "social_facebook",
-    "social_youtube", "social_linkedin", "admin_password",
+    "social_youtube", "social_linkedin",
   ];
   if (!requiredSettings.every((key) => typeof settings[key] === "string")) return false;
   const sections = settings.sections;

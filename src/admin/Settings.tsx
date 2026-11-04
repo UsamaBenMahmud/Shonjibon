@@ -71,20 +71,6 @@ export default function Settings() {
     setForm((prev) => (prev ? { ...prev, sections: { ...prev.sections, [key]: !prev.sections[key] } } : prev));
   }
 
-  function updateBranding<K extends keyof BrandingSettings>(key: K, value: BrandingSettings[K]) {
-    setForm((prev) => prev ? { ...prev, branding: { ...defaultBranding, ...prev.branding, [key]: value } } : prev);
-  }
-
-  async function uploadBrandAsset(key: "logo_mark_url" | "logo_full_url" | "logo_dark_url", file: File) {
-    try {
-      const media = await uploadMedia(file, { alt_en: "Shonjibon logo", alt_bn: "সঞ্জীবন লোগো" });
-      updateBranding(key, media.url);
-      pushToast("লোগো আপলোড হয়েছে / Logo uploaded", "success");
-    } catch (error) {
-      pushToast(error instanceof Error ? `আপলোড ব্যর্থ / Upload failed: ${error.message}` : "আপলোড ব্যর্থ / Upload failed", "error");
-    }
-  }
-
   async function uploadShellPhoto(file: File) {
     try {
       const media = await uploadMedia(file, { alt_en: "Shrimp shell story photo", alt_bn: "চিংড়ির খোলসের ছবি" });
@@ -226,31 +212,13 @@ export default function Settings() {
       <section className="card space-y-4 p-5">
         <div>
           <h2 className="font-display text-lg font-semibold text-ink">ব্র্যান্ডিং / Branding</h2>
-          <p className="mt-1 text-sm text-ink-muted">Logo mark assets are uploaded to the configured public media bucket.</p>
+          <p className="mt-1 text-sm text-ink-muted">The original Shonjibon logo is used consistently across the site.</p>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <FieldWrap label="Name in Bangla"><Input value={form.branding?.name_bn ?? defaultBranding.name_bn} onChange={(e) => updateBranding("name_bn", e.target.value)} /></FieldWrap>
-          <FieldWrap label="Name in English"><Input value={form.branding?.name_en ?? defaultBranding.name_en} onChange={(e) => updateBranding("name_en", e.target.value)} /></FieldWrap>
-          <BrandAssetUpload label="Logo mark (icon only)" value={form.branding?.logo_mark_url ?? ""} onUpload={(file) => uploadBrandAsset("logo_mark_url", file)} />
-          <BrandAssetUpload label="Full logo artwork" value={form.branding?.logo_full_url ?? ""} onUpload={(file) => uploadBrandAsset("logo_full_url", file)} />
-          <BrandAssetUpload label="Dark-mode logo variant" value={form.branding?.logo_dark_url ?? ""} onUpload={(file) => uploadBrandAsset("logo_dark_url", file)} />
-        </div>
-        <label className="flex items-center gap-2 text-sm font-medium text-ink">
-          <input type="checkbox" checked={form.branding?.show_bangla_name ?? true} onChange={(e) => updateBranding("show_bangla_name", e.target.checked)} className="accent-teal" />
-          Show Bangla name beside logo
-        </label>
-        {form.branding?.logo_full_url && !form.branding.logo_mark_url && (
-        <label className="flex items-center gap-2 text-sm font-medium text-ink">
-          <input type="checkbox" checked={form.branding.use_mark_only ?? false} onChange={(e) => updateBranding("use_mark_only", e.target.checked)} className="accent-teal" />
-          Use mark only (hide the full logo artwork)
-        </label>
-        )}
-        <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border p-4">
+        <div className="flex items-center gap-4 rounded-xl border border-border p-4">
           <div>
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-muted">Live lockup preview</p>
-            <Logo branding={{ ...defaultBranding, ...form.branding }} />
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-muted">Original logo</p>
+            <Logo />
           </div>
-          <Button type="button" variant="secondary" onClick={() => set("branding", defaultBranding)}>Reset branding to default</Button>
         </div>
       </section>
 
@@ -265,15 +233,6 @@ export default function Settings() {
           ))}
         </div>
       </section>
-
-      {!hasSupabase && (
-        <section className="card space-y-4 p-5">
-          <h2 className="font-display text-lg font-semibold text-ink">অ্যাডমিন পাসওয়ার্ড / Admin password</h2>
-          <FieldWrap label="Password" hint="Demo mode only — stored locally.">
-            <Input value={form.admin_password} onChange={(e) => set("admin_password", e.target.value)} />
-          </FieldWrap>
-        </section>
-      )}
 
       <Button onClick={handleSave}>সংরক্ষণ করুন / Save settings</Button>
 
@@ -291,23 +250,5 @@ export default function Settings() {
         </section>
       )}
     </div>
-  );
-}
-
-function BrandAssetUpload({ label, value, onUpload }: { label: string; value: string; onUpload: (file: File) => Promise<void> }) {
-  return (
-    <FieldWrap label={label}>
-      <div className="flex items-center gap-3">
-        {value && <img src={value} alt="" className="h-12 w-12 rounded-lg border border-border object-contain p-1" />}
-        <label className="cursor-pointer rounded-lg border border-border px-3 py-2 text-sm text-ink hover:bg-bg-soft">
-          Upload image
-          <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="hidden" onChange={(event) => {
-            const file = event.target.files?.[0];
-            event.target.value = "";
-            if (file) void onUpload(file);
-          }} />
-        </label>
-      </div>
-    </FieldWrap>
   );
 }

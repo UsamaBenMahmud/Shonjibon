@@ -3,45 +3,20 @@ import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/utils/cn";
 import { useThemeStore } from "@/store/theme";
-import { useQuery } from "@tanstack/react-query";
-import { getSettings } from "@/lib/api";
-import type { BrandingSettings } from "@/lib/types";
 
 // --- Logo ------------------------------------------------------------------
-const defaultBranding: BrandingSettings = {
-  name_bn: "সঞ্জীবন",
-  name_en: "Shonjibon",
-  show_bangla_name: true,
-  logo_mark_url: "",
-  logo_full_url: "",
-  logo_dark_url: "",
-  logo_height: 40,
-  use_mark_only: false,
-};
-
-export function Logo({
-  withWordmark = true,
-  className,
-  branding: brandingOverride,
-}: {
-  withWordmark?: boolean;
-  className?: string;
-  branding?: BrandingSettings;
-}) {
-  const settingsQ = useQuery({ queryKey: ["settings"], queryFn: getSettings, staleTime: 5 * 60 * 1000, retry: false });
-  const branding = brandingOverride ?? { ...defaultBranding, ...settingsQ.data?.branding };
-  const mark = branding.logo_mark_url || "/favicon.svg";
+export function Logo({ className }: { className?: string }) {
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
-      <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center">
-        <img src={mark} alt="Shonjibon logo" width={40} height={40} loading="eager" className="h-9 w-9 object-contain" />
-      </span>
-      {withWordmark && (
-        <span className="flex min-w-0 flex-col leading-tight">
-          <span className="font-display text-lg font-bold text-ink">{branding.name_en || defaultBranding.name_en}</span>
-          {branding.show_bangla_name && <span className="font-bn text-xs font-medium text-ink-muted" lang="bn">{branding.name_bn || defaultBranding.name_bn}</span>}
-        </span>
-      )}
+      <img
+        src="/brand-mark.png"
+        alt=""
+        width={40}
+        height={40}
+        loading="eager"
+        className="h-10 w-10 shrink-0 rounded-md bg-white object-contain p-0.5"
+      />
+      <span className="font-display text-lg font-bold leading-tight text-ink">Shonjibon</span>
     </span>
   );
 }
@@ -94,8 +69,7 @@ export function Section({
 
 export function SEO({ title, description, image }: { title: string; description?: string; image?: string }) {
   const full = `${title} · সঞ্জীবন Shonjibon`;
-  const settingsQ = useQuery({ queryKey: ["settings"], queryFn: getSettings, staleTime: 5 * 60 * 1000, retry: false });
-  const socialImage = image || settingsQ.data?.branding?.logo_full_url || "/brand/logo-full.png";
+  const socialImage = image || "/brand-logo-original.png";
   return (
     <Helmet>
       <title>{full}</title>

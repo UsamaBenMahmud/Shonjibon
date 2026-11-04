@@ -490,6 +490,5 @@ export interface Settings {
   contact?: ContactSettings;
   branding?: BrandingSettings;
   shell_story?: ShellStorySettings;
-  admin_password: string;
   sections: SectionToggles;
 }

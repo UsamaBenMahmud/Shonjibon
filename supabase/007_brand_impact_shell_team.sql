@@ -72,7 +72,7 @@ create trigger trg_audit_shell_parts after insert or update or delete on public.
 
 insert into public.site_settings(key, value) values
   ('branding', '{"name_bn":"সঞ্জীবন","name_en":"Shonjibon","show_bangla_name":true,"logo_mark_url":"","logo_full_url":"","logo_dark_url":"","logo_height":40,"use_mark_only":false}'::jsonb),
-  ('contact', '{"phone":"01620485218","email":"usamabenmahmud@gmail.com","address":"Khulna, Bangladesh","hours":"","map_link":"","whatsapp_enabled":false}'::jsonb)
+  ('contact', '{"phone":"01620485218","email":"","address":"Khulna, Bangladesh","hours":"","map_link":"","whatsapp_enabled":false}'::jsonb)
 on conflict (key) do nothing;
 
 insert into public.shell_parts(key, name_en, name_bn, description_en, description_bn, icon, color, hotspot_x, hotspot_y, sort_order) values

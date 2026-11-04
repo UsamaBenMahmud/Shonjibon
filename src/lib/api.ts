@@ -1105,7 +1105,7 @@ export async function getHealthCheck(): Promise<HealthCheck> {
   return {
     database: true,
     storage: true,
-    adminRole: sessionStorage.getItem("shonjibon.admin.authed") === "1",
+    adminRole: false,
     superAdmin: false,
     mfaAssurance: null,
     publishedProducts: db.products.filter((product) => product.is_published).length,
