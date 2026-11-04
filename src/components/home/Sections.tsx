@@ -104,9 +104,13 @@ export function ImpactSection({ stats, testResults = [] }: { stats: ImpactStat[]
     <Section className="bg-ocean-deep">
       <SectionHeading
         title={<span className="text-white">{t("home.impactTitle")}</span>}
-        body={lang === "en"
-          ? "We turn shrimp-shell waste into practical solutions and track our progress through transparent milestones, verified tests, and future targets."
-          : "চিংড়ির খোলসের বর্জ্যকে ব্যবহারিক সমাধানে রূপ দিই—স্বচ্ছ অগ্রগতি, যাচাইকৃত পরীক্ষা ও ভবিষ্যৎ লক্ষ্যের মাধ্যমে আমাদের প্রভাব তুলে ধরি।"}
+        body={
+          <span className="text-white/80">
+            {lang === "en"
+              ? "We turn shrimp-shell waste into practical solutions and track our progress through transparent milestones, verified tests, and future targets."
+              : "চিংড়ির খোলসের বর্জ্যকে ব্যবহারিক সমাধানে রূপ দিই—স্বচ্ছ অগ্রগতি, যাচাইকৃত পরীক্ষা ও ভবিষ্যৎ লক্ষ্যের মাধ্যমে আমাদের প্রভাব তুলে ধরি।"}
+          </span>
+        }
         align="center"
       />
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
