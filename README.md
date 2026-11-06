@@ -130,25 +130,27 @@ psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 -f supabase/tests/008_customer_accoun
 
 ### Create the first admin user
 
-Create your account at `/account` on the deployed site (choose **Create account**) and confirm the
-email if Supabase requests it. Make sure the site is connected to this Supabase project first. New
-signups receive the `customer` role and cannot grant themselves admin access. In the Supabase
-Dashboard's SQL Editor, promote only your own account by running the following after replacing the
-email address:
+Create the administrator account in the same Supabase project configured for the site. In
+**Authentication → Users**, add `admin@gmail.com` and set its password there (or use `/account` to
+register that address and then confirm it if required). Do not put the password in source code,
+`.env` files, SQL, or the client bundle. New signups receive the `customer` role and cannot grant
+themselves admin access.
+
+In the Supabase Dashboard's SQL Editor, promote that account to `super_admin`:
 
 ```sql
 insert into public.profiles (id, full_name, email, role)
 select id, coalesce(raw_user_meta_data->>'full_name', 'Admin'), email, 'super_admin'
 from auth.users
-where lower(email) = lower('you@example.com')
+where lower(email) = lower('admin@gmail.com')
 on conflict (id) do update
 set role = excluded.role, email = excluded.email;
 ```
 
-If the query affects no rows, confirm the account exists under **Authentication → Users** and that
-the email matches. Then log in at the configured admin URL (default `/control-room`) with that
-account's email/password. A super admin will be prompted to enroll in or enter an authenticator app
-code.
+If the query affects no rows, confirm the account exists under **Authentication → Users**, and that
+the migrations have been applied. Then log in at the configured admin URL (default `/control-room`)
+with that email and the password set in Supabase. On first login, a super admin must enroll an
+authenticator app and enter its code.
 Set `VITE_ADMIN_PATH` before building to change the route; it is deliberately not linked from public
 navigation and the route sets `noindex,nofollow`.
 
@@ -161,6 +163,8 @@ records or change their own role.
 
 `003_storage_policies.sql` configures the public **`media`** bucket with a 5MB limit, an image/PDF
 MIME allowlist, public read, and admin-only write/update/delete.
+Upload images from Admin → Media. Uploaded files are publicly readable; to display one on a page,
+select its URL in the relevant content editor and publish that content.
 
 ---
 
