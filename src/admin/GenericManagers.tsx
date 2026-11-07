@@ -450,6 +450,7 @@ export function TeamManager() {
     { kind: "text", key: "photo_alt_en", label: "Photo alt text (EN)" },
     { kind: "text", key: "photo_alt_bn", label: "ছবির বিকল্প লেখা (বাং)" },
     { kind: "text", key: "linkedin_url", label: "LinkedIn URL" },
+    { kind: "text", key: "facebook_url", label: "Facebook URL" },
     { kind: "text", key: "public_email", label: "Public email (separate from login email)" },
     { kind: "boolean", key: "show_public_email", label: "Show public email on the team page" },
     { kind: "number", key: "sort_order", label: "Sort order" },

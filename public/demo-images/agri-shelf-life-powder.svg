@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="36" y1="16" x2="603" y2="464" gradientUnits="userSpaceOnUse"><stop stop-color="#EEF5E8"/><stop offset="1" stop-color="#D8E8CF"/></linearGradient>
+    <linearGradient id="pack" x1="247" y1="86" x2="395" y2="374" gradientUnits="userSpaceOnUse"><stop stop-color="#FBF8E8"/><stop offset="1" stop-color="#D6E4BD"/></linearGradient>
+  </defs>
+  <rect width="640" height="480" rx="28" fill="url(#bg)"/>
+  <circle cx="126" cy="99" r="68" fill="#fff" fill-opacity=".55"/>
+  <ellipse cx="321" cy="399" rx="128" ry="18" fill="#344A31" fill-opacity=".13"/>
+  <path d="m244 101 14-28h124l14 28 17 273H227l17-273Z" fill="url(#pack)" stroke="#7D9B6C" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M258 82h124M247 109h150" stroke="#7D9B6C" stroke-width="6" stroke-linecap="round"/>
+  <path d="M248 130h148v26H248z" fill="#376B59"/>
+  <text x="322" y="149" fill="#fff" font-family="sans-serif" font-size="14" font-weight="700" text-anchor="middle" letter-spacing="2">SHONJIBON</text>
+  <path d="M322 188c-34 13-57 37-58 68 29 7 54-5 69-36 14 25 38 39 68 34-2-33-25-55-79-66Z" fill="#6BA36E"/>
+  <path d="M322 188v97m0-45-36-29m36 49 43-34" stroke="#E8F2D8" stroke-width="5" stroke-linecap="round"/>
+  <path d="M277 299h90v37h-90z" fill="#F6EDCE"/>
+  <text x="322" y="322" fill="#41664D" font-family="sans-serif" font-size="13" font-weight="700" text-anchor="middle">PLANT CARE</text>
+  <path d="M118 360c4-42 22-72 53-88 5 34-9 64-44 89" fill="#6B9A5E"/>
+  <path d="M152 347c17-30 41-47 73-51-10 30-32 47-73 51Z" fill="#87B873"/>
+  <path d="M464 363c5-39 22-67 51-83 5 31-8 60-42 84" fill="#6B9A5E"/>
+  <path d="M494 350c15-29 38-47 69-53-8 28-29 46-69 53Z" fill="#87B873"/>
+</svg>

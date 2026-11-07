@@ -42,8 +42,13 @@ export default function Home() {
         title="সঞ্জীবন Shonjibon"
         description="Shrimp-shell waste to chitosan: a low-cost, electricity-free water filter helping reduce arsenic, heavy metals and turbidity for coastal Bangladesh."
       />
-      {sections?.hero && <Hero settings={settingsQ.data} />}
-      {sections?.impact && <ImpactSection stats={impactQ.data ?? []} testResults={testResultsQ.data ?? []} />}
+      {sections?.hero && (
+        <Hero
+          settings={settingsQ.data}
+          productImage={productsQ.data?.find((product) => product.is_flagship)?.cover_image}
+        />
+      )}
+      <ImpactSection stats={impactQ.data ?? []} testResults={testResultsQ.data ?? []} />
       {sections?.shellDiagram && <ShellDiagramSection products={productsQ.data ?? []} />}
       {sections?.products && <ProductsSection products={productsQ.data ?? []} />}
       {sections?.circularEconomy && <CircularEconomySection />}
@@ -51,8 +56,8 @@ export default function Home() {
       {sections?.journey && <JourneyTimelineSection milestones={journeyQ.data ?? []} />}
       {sections?.community && <CommunityPreviewSection visits={communityQ.data ?? []} />}
       {sections?.articles && <ArticlesPreviewSection articles={articlesQ.data ?? []} />}
+      <TeamPreviewSection members={teamQ.data ?? []} />
       {sections?.testimonials && <TestimonialsSection items={testimonialsQ.data ?? []} />}
-      {sections?.team !== false && <TeamPreviewSection members={teamQ.data ?? []} />}
       {sections?.newsletter && <NewsletterSection />}
     </>
   );

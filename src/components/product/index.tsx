@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import type { Product } from "@/lib/types";
-import { formatCurrency, t2 } from "@/lib/utils";
+import { formatCurrency, isBrandLogoImage, t2 } from "@/lib/utils";
 import { Badge } from "@/components/ui";
 import { Img } from "@/components/shared";
 
@@ -15,17 +15,22 @@ export function StockBadge({ status }: { status: Product["stock_status"] }) {
 export function ProductCard({ product, large = false }: { product: Product; large?: boolean }) {
   const { i18n, t } = useTranslation();
   const lang = i18n.resolvedLanguage === "en" ? "en" : "bn";
+  const image = product.cover_image && !isBrandLogoImage(product.cover_image)
+    ? product.cover_image
+    : `/demo-images/${product.slug}.svg`;
 
   return (
     <Link
       to={`/products/${product.slug}`}
       className={`card group flex flex-col overflow-hidden transition hover:shadow-md ${large ? "sm:col-span-2 sm:flex-row" : ""}`}
     >
-      <div className={large ? "sm:w-1/2" : ""}>
+      <div className={`aspect-[4/3] overflow-hidden bg-bg-soft ${large ? "sm:aspect-auto sm:min-h-64 sm:w-[46%] sm:shrink-0" : ""}`}>
         <Img
-          src={product.cover_image}
+          src={image}
           alt={t2(product, "name", lang)}
-          className={`h-48 w-full object-cover transition duration-300 group-hover:scale-[1.02] ${large ? "sm:h-full" : ""}`}
+          className="h-full w-full object-contain p-4 transition duration-300 group-hover:scale-[1.02]"
+          width={640}
+          height={480}
         />
       </div>
       <div className="flex flex-1 flex-col gap-2 p-5">
@@ -51,7 +56,19 @@ export function ProductCard({ product, large = false }: { product: Product; larg
 export function ProductGallery({ product }: { product: Product }) {
   const { i18n } = useTranslation();
   const lang = i18n.resolvedLanguage === "en" ? "en" : "bn";
-  const images = product.images.length ? product.images : [{ id: "cover", url: product.cover_image, alt_en: product.name_en, alt_bn: product.name_bn, sort_order: 0 }];
+  const images = product.images.length
+    ? product.images.map((image) => isBrandLogoImage(image.url)
+      ? { ...image, url: `/demo-images/${product.slug}.svg` }
+      : image)
+    : [{
+        id: "cover",
+        url: product.cover_image && !isBrandLogoImage(product.cover_image)
+          ? product.cover_image
+          : `/demo-images/${product.slug}.svg`,
+        alt_en: product.name_en,
+        alt_bn: product.name_bn,
+        sort_order: 0,
+      }];
   const [active, setActive] = useState(0);
   const current = images[active] ?? images[0];
 

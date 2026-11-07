@@ -24,23 +24,23 @@
 
 :root.dark {
   color-scheme: dark;
-  --bg: 6 26 32;
-  --bg-soft: 10 37 45;
-  --surface: 14 47 56;
-  --border: 29 74 85;
-  --ink: 227 243 244;
-  --ink-muted: 156 192 198;
-  --teal: 60 184 198;
-  --teal-hover: 92 202 214;
-  --teal-light: 92 202 214;
-  --ocean-deep: 4 20 26;
-  --coral: 255 138 107;
-  --coral-text: 255 176 154;
-  --coral-ink: 6 26 32;
-  --coral-soft: 74 42 34;
-  --sand: 58 51 38;
+  --bg: 18 25 32;
+  --bg-soft: 25 34 42;
+  --surface: 31 42 51;
+  --border: 54 69 78;
+  --ink: 235 241 242;
+  --ink-muted: 169 183 188;
+  --teal: 101 190 177;
+  --teal-hover: 124 207 194;
+  --teal-light: 124 207 194;
+  --ocean-deep: 12 21 28;
+  --coral: 255 153 126;
+  --coral-text: 255 176 153;
+  --coral-ink: 27 31 34;
+  --coral-soft: 71 48 43;
+  --sand: 65 58 44;
   --shadow-card: 0 0 0;
-  --theme-color: #04141a;
+  --theme-color: #0c151c;
 }
 
 @theme {
@@ -111,9 +111,6 @@
     outline-offset: 2px;
     border-radius: 6px;
   }
-  .dark img:not([data-preserve-brightness="true"]) {
-    filter: brightness(0.92);
-  }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
@@ -133,7 +130,7 @@
   .btn-primary {
     @apply bg-teal text-white shadow-sm hover:bg-teal-hover active:scale-[0.98];
   }
-  .dark .btn-primary { @apply text-ink; }
+  .dark .btn-primary { @apply text-[#10231f]; }
   .btn-secondary {
     @apply border border-border bg-surface text-ink hover:bg-bg-soft active:scale-[0.98];
   }

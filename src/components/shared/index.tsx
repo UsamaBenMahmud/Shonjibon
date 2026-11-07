@@ -14,7 +14,7 @@ export function Logo({ className }: { className?: string }) {
         width={40}
         height={40}
         loading="eager"
-        className="h-10 w-10 shrink-0 rounded-md bg-white object-contain p-0.5"
+        className="h-10 w-10 shrink-0 object-contain"
       />
       <span className="font-display text-lg font-bold leading-tight text-ink">Shonjibon</span>
     </span>

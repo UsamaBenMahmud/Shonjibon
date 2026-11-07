@@ -305,6 +305,7 @@ export interface TeamMember {
   photo_alt_bn?: string;
   links: Record<string, string>;
   linkedin_url?: string;
+  facebook_url?: string;
   public_email?: string;
   show_public_email?: boolean;
   sort_order: number;

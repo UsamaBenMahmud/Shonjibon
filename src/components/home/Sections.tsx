@@ -101,34 +101,27 @@ export function ImpactSection({ stats, testResults = [] }: { stats: ImpactStat[]
   const featured = ordered.find((stat) => stat.is_featured) ?? ordered[0];
   const rest = ordered.filter((stat) => stat.id !== featured.id);
   return (
-    <Section className="bg-ocean-deep">
+    <Section className="bg-bg-soft/50">
       <SectionHeading
-        title={<span className="text-white">{t("home.impactTitle")}</span>}
-        body={
-          <span className="text-white/80">
-            {lang === "en"
-              ? "We turn shrimp-shell waste into practical solutions and track our progress through transparent milestones, verified tests, and future targets."
-              : "চিংড়ির খোলসের বর্জ্যকে ব্যবহারিক সমাধানে রূপ দিই—স্বচ্ছ অগ্রগতি, যাচাইকৃত পরীক্ষা ও ভবিষ্যৎ লক্ষ্যের মাধ্যমে আমাদের প্রভাব তুলে ধরি।"}
-          </span>
-        }
+        eyebrow={lang === "en" ? "Measured progress" : "পরিমাপযোগ্য অগ্রগতি"}
+        title={t("home.impactTitle")}
+        body={lang === "en"
+          ? "We turn shrimp-shell waste into practical solutions and share our progress through transparent milestones, verified tests, and clearly marked targets."
+          : "চিংড়ির খোলসের বর্জ্যকে ব্যবহারিক সমাধানে রূপ দিই—স্বচ্ছ অগ্রগতি, যাচাইকৃত পরীক্ষা ও স্পষ্টভাবে চিহ্নিত লক্ষ্যের মাধ্যমে।"}
         align="center"
       />
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="relative overflow-hidden rounded-2xl sm:row-span-2 lg:col-span-2">
+      <div className="mt-10 grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+        <div className="relative min-h-64 overflow-hidden rounded-3xl bg-ocean-deep p-3 sm:p-4">
           {featured && <StatCounter stat={featured} featured />}
-          <div className="pointer-events-none absolute bottom-6 right-6 opacity-80" aria-hidden="true">
-            <svg viewBox="0 0 120 120" className="h-28 w-28" fill="none">
-              <circle cx="60" cy="60" r="44" stroke="white" strokeWidth="9" opacity=".2" />
-              <circle cx="60" cy="60" r="44" stroke="white" strokeWidth="9" strokeDasharray="205 276" strokeLinecap="round" transform="rotate(-90 60 60)" />
-              <path d="M42 37c19-12 42-3 45 12m0 0-9-6m9 6 1-11M77 83c-19 12-42 3-45-12m0 0 9 6m-9-6-1 11" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
+          <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full border-[18px] border-white/5" aria-hidden="true" />
         </div>
-        {rest.map((stat) => (
-          <div key={stat.id} className={stat.size === "L" ? "sm:col-span-2" : ""}>
-            <StatCounter stat={stat} />
-          </div>
-        ))}
+        <div className="grid gap-4 sm:grid-cols-2">
+          {rest.map((stat) => (
+            <div key={stat.id} className={stat.size === "L" ? "sm:col-span-2" : ""}>
+              <StatCounter stat={stat} />
+            </div>
+          ))}
+        </div>
       </div>
     </Section>
   );
@@ -326,8 +319,7 @@ export function TeamPreviewSection({ members }: { members: TeamMember[] }) {
   const { t, i18n } = useTranslation();
   const lang = i18n.resolvedLanguage === "en" ? "en" : "bn";
   const settingsQ = useQuery({ queryKey: ["settings"], queryFn: getSettings });
-  const core = members.filter((m) => m.group_type === "team");
-  if (!core.length) return null;
+  const core = members.filter((m) => m.group_type === "team").slice(0, 6);
   const settings = settingsQ.data;
   const title = lang === "en" ? settings?.team_title_en : settings?.team_title_bn;
   const subtitle = lang === "en" ? settings?.team_subtitle_en : settings?.team_subtitle_bn;
@@ -340,16 +332,22 @@ export function TeamPreviewSection({ members }: { members: TeamMember[] }) {
           body={subtitle || (lang === "en" ? "The Minds Behind Shonjibon" : "সঞ্জীবনের পেছনের মানুষেরা")}
         />
         <div className="flex items-center gap-4">
-          <span className="rounded-full bg-teal/10 px-3 py-1.5 text-xs font-semibold text-teal-dark">
-            {lang === "en" ? `${core.length} team members` : `দলের সদস্য ${formatNumber(core.length, lang)} জন`}
-          </span>
+          {core.length > 0 && (
+            <span className="rounded-full bg-teal/10 px-3 py-1.5 text-xs font-semibold text-teal-dark">
+              {lang === "en" ? `${formatNumber(core.length, lang)} teammates` : `দলের সদস্য ${formatNumber(core.length, lang)} জন`}
+            </span>
+          )}
           <Link to="/team" className="text-sm font-medium text-teal-dark hover:underline">
             {t("actions.seeAll")}
           </Link>
         </div>
       </div>
       {description && <p className="mt-4 max-w-3xl text-sm leading-relaxed text-ink-muted">{description}</p>}
-      <TeamCarousel members={core} lang={lang} />
+      {core.length > 0 ? (
+        <TeamCarousel members={core} lang={lang} />
+      ) : (
+        <p className="card mt-8 p-6 text-sm leading-relaxed text-ink-muted">{t("home.teamEmpty")}</p>
+      )}
     </Section>
   );
 }

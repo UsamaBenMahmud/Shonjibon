@@ -25,7 +25,7 @@ function applyTheme(preference: ThemePreference) {
     || (preference === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
   document.documentElement.classList.toggle("dark", isDark);
   const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
-  meta?.setAttribute("content", isDark ? "#04141a" : "#0b3d4a");
+  meta?.setAttribute("content", isDark ? "#0c151c" : "#0b3d4a");
 }
 
 export const useThemeStore = create<ThemeState>((set, get) => ({

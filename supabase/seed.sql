@@ -287,12 +287,12 @@ from community_visits, generate_series(1, 3) gs where title_en = 'Lab shell-grin
 -- Team, testimonials, faqs, partners, downloads
 -- ---------------------------------------------------------------------------
 insert into team_members (group_type, name, title_en, title_bn, department, bio_en, bio_bn, sort_order) values
-('team', 'Usama Ben Mahmud', 'Team Lead & Technology', 'টিম লিড ও প্রযুক্তি', 'Mathematics', 'Leads technical design and overall direction.', 'প্রযুক্তিগত নকশা ও সামগ্রিক দিকনির্দেশনার নেতৃত্ব দেন।', 1),
-('team', 'Parboti Rani Sarkar', 'Lead Researcher, Lab & Environment', 'প্রধান গবেষক, ল্যাব ও পরিবেশ', 'Environmental Science', 'Oversees lab research and environmental testing.', 'ল্যাব গবেষণা ও পরিবেশগত পরীক্ষা তত্ত্বাবধান করেন।', 2),
-('team', 'Anika Tabassum Akhy', 'Communication & Lab Associate', 'যোগাযোগ ও ল্যাব সহযোগী', 'Communication', 'Bridges lab work and public communication.', 'ল্যাবের কাজ ও জনসাধারণের যোগাযোগের সেতুবন্ধন তৈরি করেন।', 3),
-('team', 'Jannatul Mawoa Esha', 'Finance & Budget Manager', 'অর্থ ও বাজেট ব্যবস্থাপক', 'Finance', 'Manages budgeting and financial planning.', 'বাজেট ও আর্থিক পরিকল্পনা পরিচালনা করেন।', 4),
-('team', 'Mrinmoy Mondal', 'Marketing & Creative Lead', 'মার্কেটিং ও ক্রিয়েটিভ লিড', 'Marketing', 'Leads storytelling, branding and outreach.', 'গল্প বলা, ব্র্যান্ডিং ও প্রচারণার নেতৃত্ব দেন।', 5),
-('team', 'Samia Islam Jim', 'Food Safety & Quality Testing Lead', 'খাদ্য নিরাপত্তা ও মান পরীক্ষা প্রধান', 'Food Science', 'Leads quality and food-safety testing.', 'মান ও খাদ্য-নিরাপত্তা পরীক্ষার নেতৃত্ব দেন।', 6);
+('team', 'Usama Ben Mahmud', 'Team Lead & Technology', 'টিম লিড ও প্রযুক্তি', 'Mathematics', 'Coordinates the team, plans the work, and builds the website.', 'দলকে সমন্বয় করেন, কাজের পরিকল্পনা করেন এবং ওয়েবসাইট তৈরি করেন।', 1),
+('team', 'Parboti Rani Sarkar', 'Lead Researcher, Lab & Environment', 'প্রধান গবেষক (ল্যাব ও পরিবেশ)', 'Environmental Science', 'An Environmental Science expert who leads chitosan extraction and filter testing.', 'পরিবেশবিজ্ঞানের বিশেষজ্ঞ; কাইটোসান নিষ্কাশন ও ফিল্টার পরীক্ষার নেতৃত্ব দেন।', 2),
+('team', 'Anika Tabassum Akhy', 'Communication & Lab Associate', 'যোগাযোগ ও ল্যাব সহযোগী', 'Communication', 'Balances lab work with community engagement and external communications.', 'ল্যাবের কাজের পাশাপাশি কমিউনিটির সঙ্গে সম্পৃক্ততা ও বাইরের যোগাযোগ সামলান।', 3),
+('team', 'Jannatul Mawoa Esha', 'Finance & Budget Manager', 'অর্থ ও বাজেট ব্যবস্থাপক', 'Finance', 'Handles the budget, costs, and financial planning.', 'বাজেট, ব্যয় ও আর্থিক পরিকল্পনা পরিচালনা করেন।', 4),
+('team', 'Mrinmoy Mondal', 'Marketing & Creative Lead', 'মার্কেটিং ও ক্রিয়েটিভ লিড', 'Marketing', 'Creates graphics and leads branding and promotion.', 'গ্রাফিকস তৈরি এবং ব্র্যান্ডিং ও প্রচারণার দায়িত্বে রয়েছেন।', 5),
+('team', 'Samia Islam Jim', 'Food Safety & Quality Testing Lead', 'খাদ্য নিরাপত্তা ও মান পরীক্ষা প্রধান', 'Food Engineering', 'With a Food Engineering background, she leads contamination and hazardous-substance testing, supporting the safety of our ShrimpSpice flour.', 'খাদ্য প্রকৌশলের পটভূমি থেকে দূষণ ও বিপজ্জনক পদার্থের পরীক্ষা পরিচালনা করেন, যা আমাদের ShrimpSpice গুঁড়ার নিরাপত্তা নিশ্চিত করতেও সহায়তা করে।', 6);
 
 insert into testimonials (name, role_en, role_bn, quote_en, quote_bn, is_sample, sort_order) values
 ('Rahima Begum', 'Pilot household, Khulna', 'পাইলট পরিবার, খুলনা', 'The water looks and tastes much cleaner now. (Sample feedback)', 'পানি এখন অনেক পরিষ্কার দেখায় ও লাগে। (নমুনা মতামত)', true, 1),

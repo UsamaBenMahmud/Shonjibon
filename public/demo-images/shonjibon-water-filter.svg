@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="40" y1="20" x2="600" y2="460" gradientUnits="userSpaceOnUse"><stop stop-color="#F0F8F5"/><stop offset="1" stop-color="#D5EBE9"/></linearGradient>
+    <linearGradient id="body" x1="240" y1="80" x2="420" y2="376" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset="1" stop-color="#C7E0E1"/></linearGradient>
+    <linearGradient id="water" x1="290" y1="183" x2="386" y2="268" gradientUnits="userSpaceOnUse"><stop stop-color="#8DD4CF"/><stop offset="1" stop-color="#188393"/></linearGradient>
+  </defs>
+  <rect width="640" height="480" rx="28" fill="url(#bg)"/>
+  <circle cx="497" cy="100" r="72" fill="#fff" fill-opacity=".5"/>
+  <ellipse cx="321" cy="398" rx="147" ry="23" fill="#0B3D4A" fill-opacity=".12"/>
+  <path d="M202 125c0-17 14-31 31-31h176c17 0 31 14 31 31v215c0 20-16 36-36 36H238c-20 0-36-16-36-36V125Z" fill="url(#body)" stroke="#9FC5C8" stroke-width="7"/>
+  <path d="M226 164h190v142c0 15-12 27-27 27H253c-15 0-27-12-27-27V164Z" fill="#EFF7F6"/>
+  <path d="M226 245h190v61c0 15-12 27-27 27H253c-15 0-27-12-27-27v-61Z" fill="#D4E8E7"/>
+  <path d="M226 290h190v16c0 15-12 27-27 27H253c-15 0-27-12-27-27v-16Z" fill="#D9CBAE"/>
+  <path d="M255 111h132" stroke="#BED7D8" stroke-width="8" stroke-linecap="round"/>
+  <path d="M275 88c0-13 10-23 23-23h47c13 0 23 10 23 23v23h-93V88Z" fill="#0B5969"/>
+  <path d="M317 188c-13 18-25 31-25 45a25 25 0 0 0 50 0c0-14-12-27-25-45Z" fill="url(#water)"/>
+  <path d="M306 233c2 7 7 11 14 12" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+  <path d="M266 376v14h112v-14" stroke="#8DBABD" stroke-width="7" stroke-linecap="round"/>
+  <path d="M121 344c-2-45 5-79 22-104 11 27 12 63 2 104" fill="#4D9876"/>
+  <path d="M133 306c-26-6-42-21-48-43 23 2 39 15 48 43Zm10-24c22-13 33-33 32-60-20 11-31 30-32 60Z" fill="#77B68A"/>
+  <path d="M478 365c4-30 17-52 37-64 4 24-6 44-29 63" fill="#4D9876"/>
+  <path d="M503 354c11-26 27-43 50-50-4 23-18 39-50 50" fill="#77B68A"/>
+  <path d="M261 414h119" stroke="#F2795B" stroke-width="5" stroke-linecap="round" opacity=".8"/>
+</svg>

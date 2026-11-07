@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="43" y1="18" x2="592" y2="465" gradientUnits="userSpaceOnUse"><stop stop-color="#FCF2E7"/><stop offset="1" stop-color="#F5D9C7"/></linearGradient>
+    <linearGradient id="pouch" x1="240" y1="82" x2="408" y2="379" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF8EC"/><stop offset="1" stop-color="#E8B888"/></linearGradient>
+  </defs>
+  <rect width="640" height="480" rx="28" fill="url(#bg)"/>
+  <circle cx="126" cy="107" r="65" fill="#fff" fill-opacity=".46"/>
+  <circle cx="522" cy="372" r="86" fill="#F2795B" fill-opacity=".1"/>
+  <ellipse cx="321" cy="401" rx="130" ry="21" fill="#693F2C" fill-opacity=".13"/>
+  <path d="m234 105 13-29h146l13 29 18 274H216l18-274Z" fill="url(#pouch)" stroke="#B88861" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M247 82h146M237 111h166" stroke="#B88861" stroke-width="6" stroke-linecap="round"/>
+  <path d="M245 130h150v28H245z" fill="#0B5969"/>
+  <text x="320" y="150" fill="#fff" font-family="sans-serif" font-size="16" font-weight="700" text-anchor="middle" letter-spacing="3">SHONJIBON</text>
+  <path d="M320 190c-17 13-31 25-31 41a31 31 0 0 0 62 0c0-16-14-28-31-41Z" fill="#E57F58"/>
+  <path d="M308 235c3 8 8 12 15 13" stroke="#FFE8D6" stroke-width="4" stroke-linecap="round"/>
+  <path d="M267 280c18-19 37-28 57-28s39 9 57 28v49H267v-49Z" fill="#F7E5D2"/>
+  <path d="M284 297c12-12 24-18 36-18s24 6 36 18" stroke="#C58D65" stroke-width="5" stroke-linecap="round"/>
+  <text x="320" y="359" fill="#71432E" font-family="sans-serif" font-size="16" font-weight="700" text-anchor="middle">SHELL FLOUR</text>
+  <path d="M95 332c2-29 12-51 31-67 8 22 3 45-18 68" fill="#719A65"/>
+  <path d="M120 328c14-24 32-38 55-41-8 22-25 36-55 41Z" fill="#91AE76"/>
+  <path d="M454 356c8-32 25-54 53-65-1 27-16 48-53 65Z" fill="#719A65"/>
+  <path d="M488 343c16-22 37-33 61-33-10 22-29 33-61 33Z" fill="#91AE76"/>
+</svg>

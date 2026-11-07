@@ -8,6 +8,10 @@ export function t2(obj: object | null | undefined, base: string, lang: Lang): st
   return typeof value === "string" ? value : "";
 }
 
+export function isBrandLogoImage(src?: string): boolean {
+  return !!src && /(?:^|[/_-])(?:logo|brand-mark)(?:[/_.-]|$)/i.test(src);
+}
+
 export function formatCurrency(amount: number, currency = "BDT", lang: Lang = "bn"): string {
   const digits = lang === "bn" ? toBanglaDigits(String(Math.round(amount))) : String(Math.round(amount));
   const symbol = currency === "BDT" ? "৳" : currency;

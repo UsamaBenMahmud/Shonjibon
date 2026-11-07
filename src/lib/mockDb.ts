@@ -109,10 +109,10 @@ function buildSeed(): DB {
       stock_status: "preorder",
       is_flagship: true,
       is_published: true,
-      cover_image: img("Shonjibon Filter", "#127986", "#1A9AA8"),
+      cover_image: "/demo-images/shonjibon-water-filter.svg",
       sort_order: 1,
       images: [
-        { id: genId(), product_id: "p-filter", url: img("Filter — front", "#127986", "#1A9AA8"), alt_en: "Shonjibon filter, front view", alt_bn: "সঞ্জীবন ফিল্টার, সম্মুখ দৃশ্য", sort_order: 1 },
+        { id: genId(), product_id: "p-filter", url: "/demo-images/shonjibon-water-filter.svg", alt_en: "Shonjibon filter, front view", alt_bn: "সঞ্জীবন ফিল্টার, সম্মুখ দৃশ্য", sort_order: 1 },
         { id: genId(), product_id: "p-filter", url: img("Filter — layers", "#0B3F4F", "#1A9AA8"), alt_en: "Cutaway of the 5 layers", alt_bn: "৫টি স্তরের ভেতরের দৃশ্য", sort_order: 2 },
         { id: genId(), product_id: "p-filter", url: img("Filter — cartridge", "#1A9AA8", "#F2795B"), alt_en: "Swappable chitosan cartridge", alt_bn: "পরিবর্তনযোগ্য কাইটোসান কার্তুজ", sort_order: 3 },
       ],
@@ -152,10 +152,10 @@ function buildSeed(): DB {
       stock_status: "in_stock",
       is_flagship: false,
       is_published: true,
-      cover_image: img("Shonjibon Soyad", "#F2795B", "#FBD9CF"),
+      cover_image: "/demo-images/shonjibon-soyad.svg",
       sort_order: 2,
       images: [
-        { id: genId(), product_id: "p-shad", url: img("Soyad pouch", "#F2795B", "#FBD9CF"), alt_en: "Soyad flour pouch", alt_bn: "সোয়াদ গুঁড়ার প্যাকেট", sort_order: 1 },
+        { id: genId(), product_id: "p-shad", url: "/demo-images/shonjibon-soyad.svg", alt_en: "Soyad flour pouch", alt_bn: "সোয়াদ গুঁড়ার প্যাকেট", sort_order: 1 },
       ],
       specs: [
         { id: genId(), product_id: "p-shad", label_en: "Net weight", label_bn: "নিট ওজন", value_en: "100 g", value_bn: "১০০ গ্রাম", sort_order: 1 },
@@ -188,10 +188,10 @@ function buildSeed(): DB {
       stock_status: "in_stock",
       is_flagship: false,
       is_published: true,
-      cover_image: img("Shell Ornaments", "#F2795B", "#0B3F4F"),
+      cover_image: "/demo-images/shell-craft-ornaments.svg",
       sort_order: 3,
       images: [
-        { id: genId(), product_id: "p-ornaments", url: img("Earrings", "#F2795B", "#0B3F4F"), alt_en: "Shell-craft earrings", alt_bn: "শেল-ক্রাফট কানের দুল", sort_order: 1 },
+        { id: genId(), product_id: "p-ornaments", url: "/demo-images/shell-craft-ornaments.svg", alt_en: "Shell-craft earrings", alt_bn: "শেল-ক্রাফট কানের দুল", sort_order: 1 },
       ],
       specs: [
         { id: genId(), product_id: "p-ornaments", label_en: "Material", label_bn: "উপাদান", value_en: "Treated shrimp shell, local thread", value_bn: "প্রক্রিয়াজাত চিংড়ির খোলস, স্থানীয় সুতা", sort_order: 1 },
@@ -222,10 +222,10 @@ function buildSeed(): DB {
       stock_status: "preorder",
       is_flagship: false,
       is_published: true,
-      cover_image: img("ChitoClear", "#1A9AA8", "#F5FAFA"),
+      cover_image: "/demo-images/chitoclear.svg",
       sort_order: 4,
       images: [
-        { id: genId(), product_id: "p-chitoclear", url: img("ChitoClear bottle", "#1A9AA8", "#F5FAFA"), alt_en: "ChitoClear bottle", alt_bn: "কাইটোক্লিয়ার বোতল", sort_order: 1 },
+        { id: genId(), product_id: "p-chitoclear", url: "/demo-images/chitoclear.svg", alt_en: "ChitoClear bottle", alt_bn: "কাইটোক্লিয়ার বোতল", sort_order: 1 },
       ],
       specs: [
         { id: genId(), product_id: "p-chitoclear", label_en: "Net weight", label_bn: "নিট ওজন", value_en: "50 g", value_bn: "৫০ গ্রাম", sort_order: 1 },
@@ -257,10 +257,10 @@ function buildSeed(): DB {
       stock_status: "coming_soon",
       is_flagship: false,
       is_published: true,
-      cover_image: img("Agri Powder", "#1A9AA8", "#F3EADB"),
+      cover_image: "/demo-images/agri-shelf-life-powder.svg",
       sort_order: 5,
       images: [
-        { id: genId(), product_id: "p-agri", url: img("Agri powder pack", "#1A9AA8", "#F3EADB"), alt_en: "Agri shelf-life powder pack", alt_bn: "কৃষি শেল্ফ-লাইফ গুঁড়ার প্যাক", sort_order: 1 },
+        { id: genId(), product_id: "p-agri", url: "/demo-images/agri-shelf-life-powder.svg", alt_en: "Agri shelf-life powder pack", alt_bn: "কৃষি শেল্ফ-লাইফ গুঁড়ার প্যাক", sort_order: 1 },
       ],
       specs: [
         { id: genId(), product_id: "p-agri", label_en: "Net weight", label_bn: "নিট ওজন", value_en: "100 g", value_bn: "১০০ গ্রাম", sort_order: 1 },
@@ -515,12 +515,12 @@ function buildSeed(): DB {
   ];
 
   const team_members: TeamMember[] = [
-    { id: genId(), group_type: "team", name: "Usama Ben Mahmud", title_en: "Team Lead & Technology", title_bn: "টিম লিড ও প্রযুক্তি", department: "Mathematics", bio_en: "Leads technical design and overall direction.", bio_bn: "প্রযুক্তিগত নকশা ও সামগ্রিক দিকনির্দেশনার নেতৃত্ব দেন।", photo_url: "", links: {}, sort_order: 1 },
-    { id: genId(), group_type: "team", name: "Parboti Rani Sarkar", title_en: "Lead Researcher, Lab & Environment", title_bn: "প্রধান গবেষক, ল্যাব ও পরিবেশ", department: "Environmental Science", bio_en: "Oversees lab research and environmental testing.", bio_bn: "ল্যাব গবেষণা ও পরিবেশগত পরীক্ষা তত্ত্বাবধান করেন।", photo_url: "", links: {}, sort_order: 2 },
-    { id: genId(), group_type: "team", name: "Anika Tabassum Akhy", title_en: "Communication & Lab Associate", title_bn: "যোগাযোগ ও ল্যাব সহযোগী", department: "Communication", bio_en: "Bridges lab work and public communication.", bio_bn: "ল্যাবের কাজ ও জনসাধারণের যোগাযোগের সেতুবন্ধন তৈরি করেন।", photo_url: "", links: {}, sort_order: 3 },
-    { id: genId(), group_type: "team", name: "Jannatul Mawoa Esha", title_en: "Finance & Budget Manager", title_bn: "অর্থ ও বাজেট ব্যবস্থাপক", department: "Finance", bio_en: "Manages budgeting and financial planning.", bio_bn: "বাজেট ও আর্থিক পরিকল্পনা পরিচালনা করেন।", photo_url: "", links: {}, sort_order: 4 },
-    { id: genId(), group_type: "team", name: "Mrinmoy Mondal", title_en: "Marketing & Creative Lead", title_bn: "মার্কেটিং ও ক্রিয়েটিভ লিড", department: "Marketing", bio_en: "Leads storytelling, branding and outreach.", bio_bn: "গল্প বলা, ব্র্যান্ডিং ও প্রচারণার নেতৃত্ব দেন।", photo_url: "", links: {}, sort_order: 5 },
-    { id: genId(), group_type: "team", name: "Samia Islam Jim", title_en: "Food Safety & Quality Testing Lead", title_bn: "খাদ্য নিরাপত্তা ও মান পরীক্ষা প্রধান", department: "Food Science", bio_en: "Leads quality and food-safety testing.", bio_bn: "মান ও খাদ্য-নিরাপত্তা পরীক্ষার নেতৃত্ব দেন।", photo_url: "", links: {}, sort_order: 6 },
+    { id: genId(), group_type: "team", name: "Usama Ben Mahmud", title_en: "Team Lead & Technology", title_bn: "টিম লিড ও প্রযুক্তি", department: "Mathematics", bio_en: "Coordinates the team, plans the work, and builds the website.", bio_bn: "দলকে সমন্বয় করেন, কাজের পরিকল্পনা করেন এবং ওয়েবসাইট তৈরি করেন।", photo_url: "", links: {}, sort_order: 1 },
+    { id: genId(), group_type: "team", name: "Parboti Rani Sarkar", title_en: "Lead Researcher, Lab & Environment", title_bn: "প্রধান গবেষক (ল্যাব ও পরিবেশ)", department: "Environmental Science", bio_en: "An Environmental Science expert who leads chitosan extraction and filter testing.", bio_bn: "পরিবেশবিজ্ঞানের বিশেষজ্ঞ; কাইটোসান নিষ্কাশন ও ফিল্টার পরীক্ষার নেতৃত্ব দেন।", photo_url: "", links: {}, sort_order: 2 },
+    { id: genId(), group_type: "team", name: "Anika Tabassum Akhy", title_en: "Communication & Lab Associate", title_bn: "যোগাযোগ ও ল্যাব সহযোগী", department: "Communication", bio_en: "Balances lab work with community engagement and external communications.", bio_bn: "ল্যাবের কাজের পাশাপাশি কমিউনিটির সঙ্গে সম্পৃক্ততা ও বাইরের যোগাযোগ সামলান।", photo_url: "", links: {}, sort_order: 3 },
+    { id: genId(), group_type: "team", name: "Jannatul Mawoa Esha", title_en: "Finance & Budget Manager", title_bn: "অর্থ ও বাজেট ব্যবস্থাপক", department: "Finance", bio_en: "Handles the budget, costs, and financial planning.", bio_bn: "বাজেট, ব্যয় ও আর্থিক পরিকল্পনা পরিচালনা করেন।", photo_url: "", links: {}, sort_order: 4 },
+    { id: genId(), group_type: "team", name: "Mrinmoy Mondal", title_en: "Marketing & Creative Lead", title_bn: "মার্কেটিং ও ক্রিয়েটিভ লিড", department: "Marketing", bio_en: "Creates graphics and leads branding and promotion.", bio_bn: "গ্রাফিকস তৈরি এবং ব্র্যান্ডিং ও প্রচারণার দায়িত্বে রয়েছেন।", photo_url: "", links: {}, sort_order: 5 },
+    { id: genId(), group_type: "team", name: "Samia Islam Jim", title_en: "Food Safety & Quality Testing Lead", title_bn: "খাদ্য নিরাপত্তা ও মান পরীক্ষা প্রধান", department: "Food Engineering", bio_en: "With a Food Engineering background, she leads contamination and hazardous-substance testing, supporting the safety of our ShrimpSpice flour.", bio_bn: "খাদ্য প্রকৌশলের পটভূমি থেকে দূষণ ও বিপজ্জনক পদার্থের পরীক্ষা পরিচালনা করেন, যা আমাদের ShrimpSpice গুঁড়ার নিরাপত্তা নিশ্চিত করতেও সহায়তা করে।", photo_url: "", links: {}, sort_order: 6 },
   ];
 
   const testimonials: Testimonial[] = [
